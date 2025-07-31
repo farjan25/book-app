@@ -3,7 +3,7 @@ import { Settings } from "@/types";
 import { Button } from "@/components/ui/button";
 
 interface props {
-  settings: any; // Or use the actual type of your settings object
+  settings: Settings; // Or use the actual type of your settings object
   setSettings: React.Dispatch<React.SetStateAction<Settings>>
 }
 

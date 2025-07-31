@@ -11,7 +11,7 @@ import Combobox from '@/components/ui/combobox'
 import { supabase } from "@/lib/supabaseClient";
 
 interface props {
-  settings: any; // Or use the actual type of your settings object
+  settings: Settings; // Or use the actual type of your settings object
   setSettings: React.Dispatch<React.SetStateAction<Settings>>
   projectId: number
 }
@@ -32,10 +32,10 @@ export default function ManuscriptSettings({settings, setSettings, projectId}: p
   useEffect(() => {
     setBleed(settings.bleed)
 
-    setTopMargin(settings.margin[0])
-    setOutsideMargin(settings.margin[1])
-    setBottomMargin(settings.margin[2])
-    setGutterMargin(settings.margin[3])
+    setTopMargin(String(settings.margin[0]))
+    setOutsideMargin(String(settings.margin[1]))
+    setBottomMargin(String(settings.margin[2]))
+    setGutterMargin(String(settings.margin[3]))
 
     setMarginCheck(settings.margin_check)
 

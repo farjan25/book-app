@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Infobubble } from "@/components/ui/infobubble";
 
 interface props {
-  settings: any; // Or use the actual type of your settings object
+  settings: Settings; // Or use the actual type of your settings object
   setSettings: React.Dispatch<React.SetStateAction<Settings>>
   projectId: number
 }
@@ -47,18 +47,18 @@ export default function BodyMatter({settings, setSettings, projectId}: props) {
       setLeftHeading(settings.left_heading)
       setRightHeading(settings.right_heading)
 
-      setHeadingSize(settings.heading_size)
+      setHeadingSize(String(settings.heading_size))
 
-      setHeadingHeight(settings.heading_height)
-      setHeadingMargin(settings.heading_side_margin)
+      setHeadingHeight(String(settings.heading_height))
+      setHeadingMargin(String(settings.heading_side_margin))
 
       setTextAfter(settings.extra_text_after)
       setTextBefore(settings.extra_text_preceding)
 
-      setNumberingVertical(settings.numbering_vertical)
-      setNumberingHorizontal(settings.numbering_horizontal)
+      setNumberingVertical(String(settings.numbering_vertical))
+      setNumberingHorizontal(String(settings.numbering_horizontal))
 
-      setNumberingSize(settings.numbering_size)
+      setNumberingSize(String(settings.numbering_size))
 
       console.log("how many times doeds this run")
     }, [])

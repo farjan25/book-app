@@ -3,7 +3,7 @@ import { Settings } from "@/types";
 import { PlusIcon } from "lucide-react";
 
 interface props {
-  settings: any; // Or use the actual type of your settings object
+  settings: Settings; // Or use the actual type of your settings object
   setSettings: React.Dispatch<React.SetStateAction<Settings>>
   projectId: number
 }
@@ -27,18 +27,18 @@ export default function Paging({settings, setSettings, projectId}: props) {
   const [extraPages, setExtraPages] = useState<string[]>([]);
 
   useEffect(() => {
-    setHalfTitle(settings.half_title)
-    setTitle(settings.title)
-    setCopyright(settings.copyright)
-    setDedications(settings.dedications)
-    setToc1(settings.table_of_contents[0])
-    setToc2(settings.table_of_contents[1])
+    setHalfTitle(String(settings.half_title))
+    setTitle(String(settings.title))
+    setCopyright(String(settings.copyright))
+    setDedications(String(settings.dedications))
+    setToc1(String(settings.table_of_contents[0]))
+    setToc2(String(settings.table_of_contents[1]))
     
-    setChapterPage(settings.chapter_title_page)
+    setChapterPage(String(settings.chapter_title_page))
 
-    setReferences(settings.bibliography)
-    setBackground(settings.author_background)
-    setIndex(settings.index)
+    setReferences(String(settings.bibliography))
+    setBackground(String(settings.author_background))
+    setIndex(String(settings.index))
 
     setExtraPages(settings.extra_pages)
       

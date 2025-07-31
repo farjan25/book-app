@@ -8,7 +8,7 @@ import { Infobubble } from "@/components/ui/infobubble";
 import {createNewCoverFile, countPages, processCoverFile} from '@/services/pdfProcessor'
 
 interface props {
-  settings: any; // Or use the actual type of your settings object
+  settings: Settings; // Or use the actual type of your settings object
   setSettings: React.Dispatch<React.SetStateAction<Settings>>
   projectId: number
   pdfUrl: string
