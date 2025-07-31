@@ -28,7 +28,7 @@ export default function SignUp() {
 
     return(
     <div className="min-h-screen flex flex-col absolute inset-0 z-0 bg-[url('/mainbackground.png')] bg-cover bg-no-repeat bg-center">
-      <div className="flex justify-center p-18">
+      <div className="flex justify-center mt-20">
         <h1 className="text-4xl font-semibold">Welcome to book formatter</h1>
       </div>
 

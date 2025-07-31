@@ -25,8 +25,8 @@ export default function LoginPage() {
   }
 
     return(
-    <div className="min-h-screen flex flex-col absolute inset-0 z-0 bg-[url('/mainbackground.png')] bg-cover bg-no-repeat bg-center">
-      <div className="flex justify-center p-18">
+    <div className="min-h-screen flex flex-col inset-0 z-0 bg-[url('/mainbackground.png')] bg-cover bg-no-repeat bg-center">
+      <div className="flex justify-center mt-20">
         <h1 className="text-4xl font-semibold">Log in</h1>
       </div>
 
