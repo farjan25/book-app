@@ -33,7 +33,7 @@ export default function LoginPage() {
       <div className="flex-grow flex flex-col items-center justify-center relative overflow-hidden transform -translate-y-30">
         <div className="flex text-lg">
           <h2>
-          If you don't have an account, 
+          If you don't have an account.
         </h2>
         <h2 onClick={() => router.push('/sign-up')} className="text-blue-400 mx-1 cursor-pointer hover:opacity-60">
           sign up here
