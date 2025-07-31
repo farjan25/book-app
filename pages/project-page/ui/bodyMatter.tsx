@@ -287,11 +287,12 @@ export default function BodyMatter({settings, setSettings, projectId}: props) {
                 <option value="None">
                   None
                 </option>
-                {settings.fonts.map((font: string) => (
+                // im getting some retarded error.
+                {/*settings.fonts.map((font: string) => (
                   <option key={font} value={font}>
                     {font}
                   </option>
-                ))}
+                ))*/}
               </select>
               <Infobubble text="Heading/numbering font."/>
 
