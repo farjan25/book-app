@@ -16,12 +16,22 @@ export default function LoginPage() {
   };
 
   const handleButtonClick = async () => {
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: 'https://bookquick-5wxaeepxg-farjan25s-projects.vercel.app/dashboard'
-      },
-    })
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    if (session) {
+      // User already logged in, redirect manually
+      window.location.href = '/dashboard';
+    } else {
+      // Start OAuth login
+      await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: 'https://bookquick-5wxaeepxg-farjan25s-projects.vercel.app/dashboard',
+        },
+      });
+    }
   }
 
     return(
