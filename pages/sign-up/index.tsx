@@ -19,6 +19,9 @@ export default function SignUp() {
   const handleButtonClick = async () => {
     await supabase.auth.signInWithOAuth({
       provider: 'google',
+      options: {
+        redirectTo: 'https://bookquick-5wxaeepxg-farjan25s-projects.vercel.app/dashboard'
+      },
     })
   }
 
