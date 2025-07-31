@@ -35,8 +35,8 @@ export default function Header() {
             <button onClick={() => router.push('/login')} className="cursor-pointer">
               Log in
             </button>
-            <button onClick={() => router.push('/login')} className="px-8 py-3 text-medium bg-[#CC4B58] text-white rounded-lg hover:bg-[#ED6674] transition cursor-pointer">
-              Buy Now
+            <button onClick={() => router.push('/sign-up')} className="px-8 py-3 text-medium bg-[#CC4B58] text-white rounded-lg hover:bg-[#ED6674] transition cursor-pointer">
+              Sign up
             </button>
           </div>
         </div>
