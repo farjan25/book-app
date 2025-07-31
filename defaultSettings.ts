@@ -1,0 +1,55 @@
+import { Settings } from '@/types';
+
+export const defaultSettings: Settings = {
+  pdf_link: "",
+
+  book_title: "Untitled",
+  author: "None",
+  project_id: 0,
+
+  trim_Size: [0, 0],
+  bleed: false,
+  margin: [0, 0, 0, 0],
+  margin_check: false,
+
+  half_title: 0,
+  title: 0,
+  copyright: 0,
+  dedications: 0,
+  table_of_contents: [0, 0],
+
+  chapter_title_page: 0,
+  body_font: "",
+  heading_size: 12,
+  left_heading: "name",
+  right_heading: "title",
+  heading_height: 10,
+  heading_side_margin: 12,
+  body_text_size: 12,
+  line_spacing: 4,
+  page_number_location: "top_right",
+  extra_text_preceding: "",
+  extra_text_after: "",
+  numbering_horizontal: 0,
+  numbering_vertical: 0,
+  numbering_size: 12,
+  include_front_matter_in_numbering: true,
+  front_matter_roman_numerals: false,
+  front_matter_page_numbers: false,
+  back_matter_page_numbers: false,
+
+  bibliography: 0,
+  author_background: 0,
+  index: 0,
+  extra_pages: [],
+
+  cover_link: "",
+  spine_link: "",
+  back_cover_link: "",
+  total_cover_link: "",
+
+  fonts: [],
+
+  paper_type: "",
+  page_count: 0
+};
