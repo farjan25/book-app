@@ -27,6 +27,11 @@ export default function dashboard() {
         checkLogin()
     }, [])
 
+    const handleLogout = async () => {
+      await supabase.auth.signOut();
+      window.location.href = '/'; // or wherever you want to send them
+    };
+
     return(
         <div className="absolute inset-0 z-0 bg-[url('/mainbackground.png')] bg-cover bg-no-repeat bg-center">
             <div className="mx-auto text-4xl font-medium px-20 py-5 flex flex-col">
@@ -35,6 +40,12 @@ export default function dashboard() {
 
             <div className="pl-6">
                 <IconGrid />
+            </div>
+
+            <div className="fixed bottom-6 right-6 z-50">
+                <button onClick={handleLogout} className="bg-[#FFD7D7] rounded-xl w-20 h-10 hover:bg-[#FF8C8E] cursor-pointer">
+                  Log out
+                </button>
             </div>
             
         </div>
