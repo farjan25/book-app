@@ -28,7 +28,7 @@ export default function LoginPage() {
       await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: 'https://bookquick-5wxaeepxg-farjan25s-projects.vercel.app/dashboard',
+          redirectTo: 'https://bookquick.vercel.app/dashboard',
         },
       });
     }
