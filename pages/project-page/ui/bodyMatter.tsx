@@ -38,7 +38,7 @@ export default function BodyMatter({settings, setSettings, projectId}: props) {
 
   const [numberingSize, setNumberingSize] = useState("")
 
-  const settingFonts = settings.fonts
+  const settingFonts = settings?.fonts ?? []
 
   useEffect(() => {
       setBodyFont(settings.body_font)
