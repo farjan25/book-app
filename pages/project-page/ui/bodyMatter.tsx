@@ -38,6 +38,8 @@ export default function BodyMatter({settings, setSettings, projectId}: props) {
 
   const [numberingSize, setNumberingSize] = useState("")
 
+  const settingFonts = settings.fonts
+
   useEffect(() => {
       setBodyFont(settings.body_font)
 
@@ -287,12 +289,12 @@ export default function BodyMatter({settings, setSettings, projectId}: props) {
                 <option value="None">
                   None
                 </option>
-                // im getting some retarded error.
-                {/*settings.fonts.map((font: string) => (
+                { settingFonts && (settingFonts.map((font: string) => (
                   <option key={font} value={font}>
                     {font}
                   </option>
-                ))*/}
+                )))
+                }
               </select>
               <Infobubble text="Heading/numbering font."/>
 

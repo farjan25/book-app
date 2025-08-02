@@ -78,7 +78,7 @@ export async function processPdf(pdf_url: string, settings: Settings, signal: Ab
   let pdfDoc = await PDFDocument.load(pdfBuffer)
 
   if (pdfDoc) {
-    console.log("there exists a pdfDoc")
+    //console.log("there exists a pdfDoc")
   }
 
   // Modificaions here
@@ -528,15 +528,12 @@ async function createCoverFile(page_count: number, trim_size: number[], paper_ty
     spine_width = 0.002252 * page_count 
   }
 
-  console.log(spine_width)
 
   const x_size_inches = 2 * (0.125) + 2 * (trim_size[0]) + spine_width
   const y_size_inches = 2 * 0.125 + (trim_size[1])
 
   const x_size = x_size_inches * 72 
   const y_size = y_size_inches * 72
-
-  console.log(y_size_inches)
 
   const page = new_doc.addPage([x_size, y_size])
 
@@ -634,6 +631,9 @@ async function applyImages(new_doc: PDFDocument, project_id: number, page_count:
     .download(`${project_id}_cover`)
 
   if (coverData) {
+    console.log(`${project_id}_cover`)
+    console.log(coverData)
+    console.log("we got the cover data...")
     const coverBlob = coverData // Blob
     const coverBytes = await coverBlob.arrayBuffer()
     const coverImage = await new_doc.embedPng(coverBytes)

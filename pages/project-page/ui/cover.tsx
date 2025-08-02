@@ -112,6 +112,7 @@ export default function Cover({settings, setSettings, projectId, pdfUrl, onImage
 
       if (error) {
         console.error('Error getting signed URL:', error);
+        // in this case wait for a trim size.
         return false
       }
       if (data) {
