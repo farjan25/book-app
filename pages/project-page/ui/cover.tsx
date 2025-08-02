@@ -85,7 +85,6 @@ export default function Cover({settings, setSettings, projectId, pdfUrl, onImage
 
   useEffect(() => {
     const fetchAndProcessPdf = async () => {
-      console.log(settings)
       try {
         const processedBlob = await processCoverFile(signedUrl, settings);
         const blobUrl = URL.createObjectURL(processedBlob);
@@ -277,39 +276,45 @@ export default function Cover({settings, setSettings, projectId, pdfUrl, onImage
 
   const cancelFile = async(type: string) => {
     if (type == "cover") {
-      //replace the cover file with WHITE / base
-      const { data: insertData, error: insertError } = await supabase
-      .from("projects")
-      .update({ cover: null})
-      .match({id: projectId})
-      setCoverMessage('')
+      const { data, error } = await supabase
+        .storage
+        .from('project-images')
+        .remove([`${projectId}_cover`]);
+
+      setCoverMessage("Image removed successfully")
+      if (error) {
+        console.error('Failed to delete file:', error.message);
+      } else {
+        console.log('File deleted successfully');
+      }
     }
 
     if (type == "spine") {
-       //replace the spine file with WHITE / base
-       const { data: insertData, error: insertError } = await supabase
-      .from("projects")
-      .update({ spine: null})
-      .match({id: projectId})
-      setSpineMessage('')
+       const { data, error } = await supabase
+        .storage
+        .from('project-images')
+        .remove([`${projectId}_spine`]);
+
+      setSpineMessage("Image removed successfully")
+      if (error) {
+        console.error('Failed to delete file:', error.message);
+      } else {
+        console.log('File deleted successfully');
+      }
     }
 
     if (type == "back") {
-       //replace the back file with WHITE / base
-       const { data: insertData, error: insertError } = await supabase
-      .from("projects")
-      .update({ back: null})
-      .match({id: projectId})
-      setBackMessage('')
-    }
+       const { data, error } = await supabase
+        .storage
+        .from('project-images')
+        .remove([`${projectId}_back`]);
 
-    if (type == "existing") {
-       //replace the existing file with WHITE / base
-       const { data: insertData, error: insertError } = await supabase
-      .from("projects")
-      .update({ existing: null})
-      .match({id: projectId})
-      setExistingMessage('')
+      setBackMessage("Image removed successfully")
+      if (error) {
+        console.error('Failed to delete file:', error.message);
+      } else {
+        console.log('File deleted successfully');
+      }
     }
   }
 
@@ -339,13 +344,9 @@ export default function Cover({settings, setSettings, projectId, pdfUrl, onImage
                 onChange={handleCoverFileChange}
               />
               <p className="">{coverMessage}</p>
-              {
-                coverMessage !== '' && coverMessage !== "Please upload an image." && (
-                  <button onClick={() => cancelFile("cover")} className="bg-white rounded-full p-2 hover:bg-gray-200">
-                    <X size={18}></X>
-                  </button>
-                )
-              }
+                <button onClick={() => cancelFile("cover")} className="bg-white rounded-full p-2 hover:bg-gray-200">
+                  <X size={18}></X>
+                </button>
             </div>
           </div>
 
@@ -362,13 +363,10 @@ export default function Cover({settings, setSettings, projectId, pdfUrl, onImage
                 onChange={handleSpineFileChange}
               />
               <p className="">{spineMessage}</p>
-              {
-                spineMessage !== '' && spineMessage !== "Please upload an image." && (
-                  <button onClick={() => cancelFile("spine")} className="bg-white rounded-full p-2 hover:bg-gray-200">
-                    <X size={18}></X>
-                  </button>
-                )
-              }
+                <button onClick={() => cancelFile("spine")} className="bg-white rounded-full p-2 hover:bg-gray-200">
+                  <X size={18}></X>
+                </button>
+
             </div>
           </div>
 
@@ -385,13 +383,9 @@ export default function Cover({settings, setSettings, projectId, pdfUrl, onImage
                 onChange={handleBackCoverChange}
               />
               <p className="">{backMessage}</p>
-              {
-                backMessage !== '' && backMessage !== "Please upload an image." && (
-                  <button onClick={() => cancelFile("back")} className="bg-white rounded-full p-2 hover:bg-gray-200">
-                    <X size={18}></X>
-                  </button>
-                )
-              }
+                <button onClick={() => cancelFile("back")} className="bg-white rounded-full p-2 hover:bg-gray-200">
+                  <X size={18}></X>
+                </button>
             </div>
           </div>
 

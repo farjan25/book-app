@@ -87,18 +87,6 @@ export default function NewProject({openState, setOpenState}: props) {
             const stringId = String(insertedId)
             console.log('Inserted project ID:', insertedId);
 
-            const filePath = `${stringId}_composite`
-            const res = await fetch('/googlepng.png')
-            const blob = await res.blob()
-            const file = new File([blob], filePath, { type: blob.type })
-            
-            const { data: uploadData, error: uploadError } = await supabase.storage
-            .from('project-images')
-            .upload(filePath, file, {
-                cacheControl: '3600',
-                upsert: true // overwrite if exists
-            })
-
             return insertedId
             }
         } else {
