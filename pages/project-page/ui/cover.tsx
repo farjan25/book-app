@@ -79,8 +79,6 @@ export default function Cover({settings, setSettings, projectId, pdfUrl, onImage
       checkFile()
     }
 
-
-
   }, [])
 
   useEffect(() => {
@@ -142,9 +140,9 @@ export default function Cover({settings, setSettings, projectId, pdfUrl, onImage
       setCoverFile(file)
 
       const { data, error } = await supabase.storage
-      .from('project-images') // replace with your actual bucket
+      .from('project-images')
       .upload(`${projectId}_cover`, file, {
-        cacheControl: '3600',
+        cacheControl: '0',
         upsert: true,
       })
 
@@ -154,10 +152,10 @@ export default function Cover({settings, setSettings, projectId, pdfUrl, onImage
         console.log("File uploaded:", data)
       }
 
-      const { data: insertData, error: insertError } = await supabase
-      .from("projects")
-      .update({ cover: `${projectId}_cover`})
-      .match({id: projectId})
+      setSettings(prev => ({
+        ...prev,
+        cover: true,
+      }));
       
     }
   }
@@ -181,7 +179,7 @@ export default function Cover({settings, setSettings, projectId, pdfUrl, onImage
       const { data, error } = await supabase.storage
       .from('project-images') // replace with your actual bucket
       .upload(`${projectId}_spine`, file, {
-        cacheControl: '3600',
+        cacheControl: '0',
         upsert: true,
       })
 
@@ -191,10 +189,10 @@ export default function Cover({settings, setSettings, projectId, pdfUrl, onImage
         console.log("File uploaded:", data)
       }
 
-      const { data: insertData, error: insertError } = await supabase
-      .from("projects")
-      .update({ spine: `${projectId}_spine`})
-      .match({id: projectId})
+      setSettings(prev => ({
+        ...prev,
+        spine: true,
+      }));
       
     }
   }
@@ -218,7 +216,7 @@ export default function Cover({settings, setSettings, projectId, pdfUrl, onImage
       const { data, error } = await supabase.storage
       .from('project-images') // replace with your actual bucket
       .upload(`${projectId}_back`, file, {
-        cacheControl: '3600',
+        cacheControl: '0',
         upsert: true,
       })
 
@@ -228,94 +226,37 @@ export default function Cover({settings, setSettings, projectId, pdfUrl, onImage
         console.log("File uploaded:", data)
       }
 
-      const { data: insertData, error: insertError } = await supabase
-      .from("projects")
-      .update({ back: `${projectId}_back`})
-      .match({id: projectId})
+      setSettings(prev => ({
+        ...prev,
+        back: true,
+      }));
       
     }
   }
-
-  const handleExistingClick = () => {
-    existingInputRef.current?.click()
-  }
-
-  const handleExistingFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) {
-      if (!file.type.startsWith('image/')) {
-        setExistingMessage("Please upload an image.")
-        return
-      }
-
-      console.log(file) // pass file to parent or upload logic
-      setExistingMessage(file.name)
-      setExistingFile(file)
-
-      const { data, error } = await supabase.storage
-      .from('project-images') // replace with your actual bucket
-      .upload(`${projectId}_existing`, file, {
-        cacheControl: '3600',
-        upsert: true,
-      })
-
-      if (error) {
-        console.error("Upload error:", error)
-      } else {
-        console.log("File uploaded:", data)
-      }
-
-      const { data: insertData, error: insertError } = await supabase
-      .from("projects")
-      .update({ existing: `${projectId}_existing`})
-      .match({id: projectId})
-      
-    }
-  }
-
-  // have to change this stuff
 
   const cancelFile = async(type: string) => {
     if (type == "cover") {
-      const { data, error } = await supabase
-        .storage
-        .from('project-images')
-        .remove([`${projectId}_cover`]);
-
-      setCoverMessage("Image removed successfully")
-      if (error) {
-        console.error('Failed to delete file:', error.message);
-      } else {
-        console.log('File deleted successfully');
-      }
+      setSettings(prev => ({
+        ...prev,
+        cover: false,
+      }));
+      setCoverMessage("Image successfully deleted.")
     }
 
     if (type == "spine") {
-       const { data, error } = await supabase
-        .storage
-        .from('project-images')
-        .remove([`${projectId}_spine`]);
-
-      setSpineMessage("Image removed successfully")
-      if (error) {
-        console.error('Failed to delete file:', error.message);
-      } else {
-        console.log('File deleted successfully');
-      }
+      setSettings(prev => ({
+        ...prev,
+        spine: false,
+      }));
+      setSpineMessage("Image successfully deleted.")
     }
 
     if (type == "back") {
-       const { data, error } = await supabase
-        .storage
-        .from('project-images')
-        .remove([`${projectId}_back`]);
-
-      setBackMessage("Image removed successfully")
-      if (error) {
-        console.error('Failed to delete file:', error.message);
-      } else {
-        console.log('File deleted successfully');
-      }
+      setSettings(prev => ({
+        ...prev,
+        back: false,
+      }));
+      setBackMessage("Image successfully deleted.")
     }
   }
 

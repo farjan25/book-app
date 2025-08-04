@@ -50,4 +50,7 @@ export interface Settings {
 
   paper_type: string;
   page_count: number;
+  cover: boolean;
+  spine: boolean;
+  back: boolean;
 }

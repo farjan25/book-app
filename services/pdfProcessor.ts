@@ -532,12 +532,30 @@ async function createCoverFile(page_count: number, trim_size: number[], paper_ty
   const x_size_inches = 2 * (0.125) + 2 * (trim_size[0]) + spine_width
   const y_size_inches = 2 * 0.125 + (trim_size[1])
 
-  const x_size = x_size_inches * 72 
-  const y_size = y_size_inches * 72
+  let x_size = x_size_inches * 72 
+  let y_size = y_size_inches * 72
+
+  if (trim_size[0] == 0) {
+    x_size= 5 * 72
+    y_size = 3 * 72
+  }
 
   const page = new_doc.addPage([x_size, y_size])
 
   const font = await new_doc.embedFont(StandardFonts.Helvetica);
+
+  if (trim_size[0] == 0) {
+    const trimSizeText = "Please select a valid trim size"
+    const textSize = font.widthOfTextAtSize(trimSizeText, 20)
+    page.drawText(trimSizeText, {
+      x: (x_size / 2) - (textSize / 2),
+      y: y_size / 2,
+      size: 20,
+      font: font
+    })
+    console.log("the trim size is 0")
+    return new_doc
+  }
 
   page.drawRectangle({
     x: 0.125 * 72,
@@ -606,7 +624,7 @@ async function createCoverFile(page_count: number, trim_size: number[], paper_ty
   return new_doc
 }
 
-async function applyImages(new_doc: PDFDocument, project_id: number, page_count: number, trim_size: number[], paper_type: string) {
+async function applyImages(new_doc: PDFDocument, project_id: number, page_count: number, trim_size: number[], paper_type: string, cover_bool: boolean, spine_bool: boolean, back_bool: boolean) {
 
   // front section
   const page = new_doc.getPage(0)
@@ -630,10 +648,10 @@ async function applyImages(new_doc: PDFDocument, project_id: number, page_count:
     .from('project-images')
     .download(`${project_id}_cover`)
 
-  if (coverData) {
-    console.log(`${project_id}_cover`)
-    console.log(coverData)
-    console.log("we got the cover data...")
+
+
+  if (coverData && cover_bool) {
+    
     const coverBlob = coverData // Blob
     const coverBytes = await coverBlob.arrayBuffer()
     const coverImage = await new_doc.embedPng(coverBytes)
@@ -644,6 +662,7 @@ async function applyImages(new_doc: PDFDocument, project_id: number, page_count:
       width: (trim_size[0] + 0.125) * 72,
       height: (trim_size[1] + 0.25) * 72,
     })
+    
   }
 
   const { data: spineData, error: spineError } = await supabase
@@ -651,7 +670,7 @@ async function applyImages(new_doc: PDFDocument, project_id: number, page_count:
     .from('project-images')
     .download(`${project_id}_spine`)
 
-  if (spineData) {
+  if (spineData && spine_bool) {
     const spineBlob = spineData // Blob
     const spineBytes = await spineBlob.arrayBuffer()
     const spineImage = await new_doc.embedPng(spineBytes)
@@ -670,7 +689,7 @@ async function applyImages(new_doc: PDFDocument, project_id: number, page_count:
     .from('project-images')
     .download(`${project_id}_back`)
 
-  if (backData) {
+  if (backData && back_bool) {
     const backBlob = backData // Blob
     const backBytes = await backBlob.arrayBuffer()
     const backImage = await new_doc.embedPng(backBytes)
@@ -692,7 +711,7 @@ async function changeCoverPdf(pdfDoc: PDFDocument, settings: Settings) {
   
 
   let new_doc = await createCoverFile(settings.page_count, settings.trim_Size, settings.paper_type)  // -- based on paper type, trim size, page count also include the ISBN
-  new_doc = await applyImages(new_doc, settings.project_id, settings.page_count, settings.trim_Size, settings.paper_type)
+  new_doc = await applyImages(new_doc, settings.project_id, settings.page_count, settings.trim_Size, settings.paper_type, settings.cover, settings.spine, settings.back)
 
   return new_doc
 }

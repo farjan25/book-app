@@ -7,7 +7,9 @@ export default function Overview() {
 
           {/* Line Spacing */}
           <div>
-            <label className="block font-medium mb-2">Welcome to your project, c</label>
+            <label className="block font-medium mb-2">
+              Welcome to your project, click here for a guide on how to use the editor.
+            </label>
               
           </div>
 

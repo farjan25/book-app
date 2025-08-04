@@ -51,5 +51,9 @@ export const defaultSettings: Settings = {
   fonts: [],
 
   paper_type: "",
-  page_count: 0
+  page_count: 0,
+
+  cover: false,
+  spine: false,
+  back: false
 };
