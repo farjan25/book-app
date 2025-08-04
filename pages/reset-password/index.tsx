@@ -4,8 +4,6 @@ import { useState } from "react";
 
 export default function ResetPassword() {
 
-  const router = useRouter()
-
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('')
 
@@ -50,19 +48,9 @@ export default function ResetPassword() {
           <span className="text-xl">request reset</span>
         </button>
 
-          {
-            email && (
-              <label>
-                The password has been reset!
-              </label>
-            )
-
-          }
-
-
-        <button onClick={() => router.push('/update-password')} className="w-60 mt-10 bg-[#FFB2B2] text-black py-2 rounded-md mb-3 flex items-center justify-center gap-2 hover:bg-[#FF8C8E] transition cursor-pointer">
-          <span className="text-xl">quick update passowrd button</span>
-        </button>
+         <label>
+          {message}
+         </label>
 
       </div>
     </div>

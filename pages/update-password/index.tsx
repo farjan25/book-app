@@ -22,6 +22,7 @@ export default function updatePassword() {
             setMessage('Error updating password: ' + error.message )
         } else {
             setMessage('Password updated successfully!')
+            router.push("/")
         }
     } else {
         setMessage('Passwords are not the same')
