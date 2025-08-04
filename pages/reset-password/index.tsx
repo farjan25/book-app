@@ -7,12 +7,22 @@ export default function ResetPassword() {
   const router = useRouter()
 
   const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('')
 
   const handleReset = async () => {
-    const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: 'https://bookquick.vercel.com/update-password' 
-    })
-    console.log(email)
+    if (email == '') {
+      setMessage("Please provide a valid email Address")
+    } else {
+      const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: 'https://bookquick.vercel.app/update-password' 
+      })
+
+      if (error) {
+        setMessage("There was an error. Please submit a proper email address.")
+      } else {
+        setMessage("A password reset request has been sent. Please check your email.")
+      }
+    }
   };
 
     return(
@@ -39,6 +49,16 @@ export default function ResetPassword() {
         <button onClick={handleReset} className="w-60 mt-10 bg-[#FFB2B2] text-black py-2 rounded-md mb-3 flex items-center justify-center gap-2 hover:bg-[#FF8C8E] transition cursor-pointer">
           <span className="text-xl">request reset</span>
         </button>
+
+          {
+            email && (
+              <label>
+                The password has been reset!
+              </label>
+            )
+
+          }
+
 
         <button onClick={() => router.push('/update-password')} className="w-60 mt-10 bg-[#FFB2B2] text-black py-2 rounded-md mb-3 flex items-center justify-center gap-2 hover:bg-[#FF8C8E] transition cursor-pointer">
           <span className="text-xl">quick update passowrd button</span>
