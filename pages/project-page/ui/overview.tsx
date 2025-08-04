@@ -2,16 +2,17 @@
 
 export default function Overview() {
     return(
+      <div>
+          <div>
+            <label className="block font-medium mb-2 p-7 text-xl">
+              Welcome to your project, click <a href="/help" target="_blank" rel="noopener noreferrer" className="underline">here</a> for a guide on how to use the editor.
+            </label>
+          </div>
       <div className="w-160 flex">
-        <div className="p-8 space-y-8  w-110">
+        
+        <div className="pl-8 space-y-8 w-110">
 
           {/* Line Spacing */}
-          <div>
-            <label className="block font-medium mb-2">
-              Welcome to your project, click here for a guide on how to use the editor.
-            </label>
-              
-          </div>
 
           {/* Bleed */}
           <div className="">
@@ -165,7 +166,7 @@ export default function Overview() {
         </div>
         {/* Preview */}
         <div className="w-60">
-          <label className="block font-medium mt-22">Cover Checklist:</label>
+          <label className="block font-medium">Cover Checklist:</label>
           <div className="flex flex-col space-y-3">
 
             <div>
@@ -226,6 +227,6 @@ export default function Overview() {
           </div>
         </div>
       </div>
-      
+    </div>
     )
 }

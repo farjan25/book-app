@@ -10,8 +10,9 @@ export default function ResetPassword() {
 
   const handleReset = async () => {
     const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-      //redirectTo: 'https://yourdomain.com/update-password' update password
+      redirectTo: 'https://bookquick.vercel.com/update-password' 
     })
+    console.log(email)
   };
 
     return(
