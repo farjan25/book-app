@@ -28,6 +28,7 @@ export default function BodyMatter({settings, setSettings, projectId}: props) {
   const [headingHeight, setHeadingHeight] = useState("")
   const [headingMargin, setHeadingMargin] = useState("")
 
+  const [enabled, setEnabled] = useState(false)
   const [lineSpacing, setLineSpacing] = useState("")
 
   const [textAfter, setTextAfter] = useState("")
@@ -201,6 +202,23 @@ export default function BodyMatter({settings, setSettings, projectId}: props) {
       ...prev,
       numbering_size: Number(int),
     }));
+  }
+
+  const handleEnable = (e: boolean) => {
+    if (e == true) {
+      setEnabled(e)
+      setSettings(prev => ({
+        ...prev,
+        numbering_enabled: e,
+      }));
+    }
+    if (e == false) {
+      setEnabled(e)
+      setSettings(prev => ({
+        ...prev,
+        numbering_enabled: e,
+      }));
+    }
   }
 
   const setPageLocation = (location: string) => {
@@ -388,6 +406,15 @@ export default function BodyMatter({settings, setSettings, projectId}: props) {
           <div>
             <label className="block font-medium mb-2 text-lg">Page Numbering:</label>
             <div className="space-y-3">
+              <div className="flex items-center space-x-3">
+                <input 
+                checked={enabled}
+                type="checkbox"
+                onChange={(e) => handleEnable(e.target.checked)}
+                
+                />
+                <span>Enabled? </span>
+              </div>
               <span className="">location:</span>
               <div className="flex space-x-4 pt-1">
                 <Button onClick={() => setPageLocation("top_right")} className="bg-[#FFD7D7] hover:bg-[#FF8C8E] transition text-black font-normal w-26 h-11">

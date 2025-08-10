@@ -54,9 +54,10 @@ async function changePdf(pdfDoc: PDFDocument, differences: string[], settings: S
   pdfDoc = await applyMargin(pdfDoc, settings.margin)
   pdfDoc = await embedFonts(pdfDoc, settings.fonts)
   pdfDoc = await applyHeading(pdfDoc, settings.book_title, settings.author, settings.left_heading, settings.right_heading, settings.heading_height, settings.heading_side_margin, settings.heading_size, settings.body_font, unique_pages)
-  pdfDoc = await applyNumbering(pdfDoc, settings.page_number_location, settings.extra_text_after, settings.extra_text_preceding, settings.numbering_vertical, settings.numbering_horizontal, settings.numbering_size, unique_pages, settings.body_font)
   pdfDoc = await scaledPdf(pdfDoc, settings.trim_Size) //this is the problem
   pdfDoc = await applyBleed(pdfDoc, settings.bleed)
+  pdfDoc.registerFontkit(fontKit)
+  pdfDoc = await applyNumbering(pdfDoc, settings.page_number_location, settings.extra_text_after, settings.extra_text_preceding, settings.numbering_vertical, settings.numbering_horizontal, settings.numbering_size, unique_pages, settings.body_font, settings.numbering_enabled)
   pdfDoc = await applyMarginCheck(pdfDoc, settings.margin_check)
   
   
@@ -418,7 +419,7 @@ const applyHeading = async (pdfDoc: PDFDocument, title: string, author: string, 
   return pdfDoc
 }
 
-const applyNumbering = async (pdfDoc: PDFDocument, location: string, extra_after: string, extra_before: string, vertical_margin: number, horizontal_margin: number, size: number, exempt_pages: number[], body_font: string) => {
+const applyNumbering = async (pdfDoc: PDFDocument, location: string, extra_after: string, extra_before: string, vertical_margin: number, horizontal_margin: number, size: number, exempt_pages: number[], body_font: string, numbering_enabled: boolean) => {
 
   const pages = pdfDoc.getPages()
 
@@ -432,54 +433,56 @@ const applyNumbering = async (pdfDoc: PDFDocument, location: string, extra_after
     customFont = await pdfDoc.embedFont(fontBytes)
   }
 
+  if (numbering_enabled == true) {
+    for (let i = 0; i < pages.length; i++) {
 
-  for (let i = 0; i < pages.length; i++) {
+      if (exempt_pages.includes(i + 1)) {
+        continue
+      }
+      
+      const page = pages[i]
+      const { width, height } = page.getSize()
 
-    if (exempt_pages.includes(i + 1)) {
-      continue
-    }
+      const text = extra_before + String(i + 1) + extra_after
+      
+      let x = horizontal_margin
+      let y = vertical_margin
+      const textwidth = customFont.widthOfTextAtSize(text, size)
     
-    const page = pages[i]
-    const { width, height } = page.getSize()
+      if (location == "top_right") {
+        x = width - horizontal_margin - textwidth
+        y = height - vertical_margin
+      }
+      if (location == "top_middle") {
+        x = width / 2 - (textwidth / 2)
+        y = height - vertical_margin
+      }
+      if (location == "top_left") {
+        x = horizontal_margin
+        y = height - vertical_margin
+      }
+      if (location == "bottom_right") {
+        x = width - horizontal_margin - textwidth
+        y = vertical_margin
+      }
+      if (location == "bottom_middle") {
+        x = width / 2 - (textwidth / 2)
+        y = vertical_margin
+      }
+      if (location == "bottom_left") {
+        x = horizontal_margin
+        y = vertical_margin
+      }
 
-    const text = extra_before + String(i + 1) + extra_after
-    
-    let x = horizontal_margin
-    let y = vertical_margin
-    const textwidth = customFont.widthOfTextAtSize(text, size)
-  
-    if (location == "top_right") {
-      x = width - horizontal_margin - textwidth
-      y = height - vertical_margin
+      page.drawText(text, {
+        x: x,
+        y: y,
+        size: size,
+        font: customFont
+      })
     }
-    if (location == "top_middle") {
-      x = width / 2 - (textwidth / 2)
-      y = height - vertical_margin
-    }
-    if (location == "top_left") {
-      x = horizontal_margin
-      y = height - vertical_margin
-    }
-    if (location == "bottom_right") {
-      x = width - horizontal_margin - textwidth
-      y = vertical_margin
-    }
-    if (location == "bottom_middle") {
-      x = width / 2 - (textwidth / 2)
-      y = vertical_margin
-    }
-    if (location == "bottom_left") {
-      x = horizontal_margin
-      y = vertical_margin
-    }
-
-    page.drawText(text, {
-      x: x,
-      y: y,
-      size: size,
-      font: customFont
-    })
-
+  } else {
+    return pdfDoc
   }
   
   return pdfDoc

@@ -25,7 +25,7 @@ export default function Header() {
             FAQ
           </a>
           <a href="#" className="hover:text-black transition-colors">
-            Pricing
+            More info
           </a>
         </nav>
         

@@ -27,6 +27,7 @@ export const defaultSettings: Settings = {
   heading_side_margin: 12,
   body_text_size: 12,
   line_spacing: 4,
+  numbering_enabled: false,
   page_number_location: "top_right",
   extra_text_preceding: "",
   extra_text_after: "",

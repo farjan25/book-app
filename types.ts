@@ -25,6 +25,7 @@ export interface Settings {
   heading_side_margin: number;
   body_text_size: number;
   line_spacing: number;
+  numbering_enabled: boolean;
   page_number_location: string;
   extra_text_preceding: string;
   extra_text_after: string;

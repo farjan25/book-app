@@ -238,21 +238,40 @@ useEffect(() => {
   */
 }, [settings]);
 
+const getProjectName = async() => {
+  console.log(projectId)
+  const { data, error } = await supabase
+    .from('projects')
+    .select('name')
+    .eq('id', projectId)
+    .single()
 
-const download = () => {
+  if (data) {
+    return data.name
+  } else {
+    return null
+  }
+}
+
+const download = async() => {
   saveSettings()
     const a = document.createElement('a');
 
+  const name = await getProjectName()
+  let text = "document"
+  if (name != null) {
+    text = name
+  }
   if (tab == 'cover') {
     if (imageUrl) {
       a.href = imageUrl;
-      a.download = 'cover.pdf'; // NEED TO CHNAGFE THE FINAL DOCUMENT NAME
+      a.download = `${text}_cover.pdf`; // NEED TO CHNAGFE THE FINAL DOCUMENT NAME
       a.click();
     }
   } else {
     if (blobUrl) {
       a.href = blobUrl;
-      a.download = 'document.pdf'; // NEED TO CHNAGFE THE FINAL DOCUMENT NAME
+      a.download = `${text}.pdf`; // NEED TO CHNAGFE THE FINAL DOCUMENT NAME
       a.click();
     }
   }
