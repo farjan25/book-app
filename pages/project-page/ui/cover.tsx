@@ -340,7 +340,7 @@ export default function Cover({settings, setSettings, projectId, pdfUrl, onImage
             </div>
             <div className="pt-4 flex space-x-4">
               <div className="flex space-x-4">
-                {["White", "Cream", "Standard color paper", "Premium color paper"].map((i) => (
+                {["Cream", "White", "Standard color paper", "Premium color paper"].map((i) => (
                   <label key={i} style={{ display: 'block', marginBottom: '8px' }}>
                     <div className="space-x-2">
                     <input

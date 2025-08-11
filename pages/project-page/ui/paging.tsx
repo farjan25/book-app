@@ -166,7 +166,7 @@ export default function Paging({settings, setSettings, projectId}: props) {
 
             {/* Line Spacing */}
           <div>
-            <span className="text-lg">Labelled pages are exempt from headings and optionally page numbering</span>        
+            <span className="text-lg">Labelled pages are exempt from headings and page numbering</span>        
           </div>
           <div>
             <label className="block font-medium mb-2">Half title:</label>

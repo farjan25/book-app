@@ -33,6 +33,21 @@ export default function Combobox({
   const [open, setOpen] = React.useState(false)
   const [value, setValue] = React.useState("")
   const [fonts, setFonts] = React.useState<{ value: string; label: string }[]>([])
+  
+  const [visibleCount, setVisibleCount] = React.useState(20)
+  const scrollRef = React.useRef<HTMLDivElement>(null)
+  
+  const handleScroll = React.useCallback(() => {
+    const el = scrollRef.current
+    if (!el) return
+
+    const isBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 10
+    if (isBottom) {
+      console.log("at the bottom")
+      setVisibleCount(prev => Math.min(prev + 20, fonts.length))
+      console.log(visibleCount)
+    }
+  }, [fonts.length])
 
   async function fetchFontsourceFonts() {
     const res = await fetch('https://api.fontsource.org/v1/fonts')
@@ -97,11 +112,21 @@ export default function Combobox({
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
         <Command>
-          <CommandInput placeholder="Search fonts..." className="h-9" onValueChange={(e) => setQuery(e)}/>
+          <CommandInput 
+          placeholder="Search fonts..." 
+          className="h-9" 
+          onValueChange={(e) => setQuery(e)}
+          value={query}
+          onBlur={() => setQuery("")}
+          />
           <CommandList>
             <CommandEmpty>No font found.</CommandEmpty>
-            <CommandGroup>
-              {filteredFonts.slice(0, 20).map(font => (
+            <CommandGroup
+              ref={scrollRef}
+              onScroll={handleScroll}
+              style={{ maxHeight: 300, overflowY: "auto" }}
+            >
+              {filteredFonts.slice(0, visibleCount).map(font => (
                 <CommandItem
                   key={font.label}
                   value={font.value}

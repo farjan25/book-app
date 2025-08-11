@@ -54,11 +54,11 @@ async function changePdf(pdfDoc: PDFDocument, differences: string[], settings: S
   pdfDoc = await applyMargin(pdfDoc, settings.margin)
   pdfDoc = await embedFonts(pdfDoc, settings.fonts)
   pdfDoc = await applyHeading(pdfDoc, settings.book_title, settings.author, settings.left_heading, settings.right_heading, settings.heading_height, settings.heading_side_margin, settings.heading_size, settings.body_font, unique_pages)
-  pdfDoc = await scaledPdf(pdfDoc, settings.trim_Size) //this is the problem
-  pdfDoc = await applyBleed(pdfDoc, settings.bleed)
+  pdfDoc = await scaledPdf(pdfDoc, settings.trim_Size, settings.bleed) //this is the problem
+  //pdfDoc = await applyBleed(pdfDoc, settings.bleed)
   pdfDoc.registerFontkit(fontKit)
   pdfDoc = await applyNumbering(pdfDoc, settings.page_number_location, settings.extra_text_after, settings.extra_text_preceding, settings.numbering_vertical, settings.numbering_horizontal, settings.numbering_size, unique_pages, settings.body_font, settings.numbering_enabled)
-  pdfDoc = await applyMarginCheck(pdfDoc, settings.margin_check)
+  pdfDoc = await applyMarginCheck(pdfDoc, settings.margin_check, settings.bleed)
   
   
   // then cover stuff
@@ -98,19 +98,20 @@ export async function processPdf(pdf_url: string, settings: Settings, signal: Ab
 
                         // changing stuff
 
-const scaledPdf = async (pdfDoc: PDFDocument, size: number[]) => {
+const scaledPdf = async (pdfDoc: PDFDocument, size: number[], bleed: boolean) => {
 
   const newDoc = await PDFDocument.create()
-
-  if (size[0] == 0) {
-
-  }
 
   const x_size = size[0]
   const y_size = size[1]
 
   let newWidth = x_size * 72
   let newHeight = y_size * 72   //72
+
+  if (bleed == true) {
+    newWidth = newWidth + (0.125 * 72)
+    newHeight = newHeight + (0.25 * 72)
+  }
 
   const pages = pdfDoc.getPages()
 
@@ -187,7 +188,7 @@ const applyBleed = async (pdfDoc: PDFDocument, state: boolean) => {
   }
 }
 
-const applyMarginCheck = async (pdfDoc: PDFDocument, margin_check: boolean) => {
+const applyMarginCheck = async (pdfDoc: PDFDocument, margin_check: boolean, bleed: boolean) => {
 
   if (margin_check == true) {
 
@@ -197,69 +198,135 @@ const applyMarginCheck = async (pdfDoc: PDFDocument, margin_check: boolean) => {
       const currentPage = pdfDoc.getPage(i)
       const { width, height } = currentPage.getSize()
 
-      currentPage.drawLine({
-        start: { x: 0, y: height / 2 },
-        end: { x: 0.25 * 72, y: height / 2 },
-        thickness: 3,
-        color: rgb(1, 0, 0),
-        opacity: 0.75,
-      })
+      if (bleed == true) {
+        currentPage.drawLine({
+          start: { x: 0, y: height / 2 },
+          end: { x: 0.375 * 72, y: height / 2 },
+          thickness: 3,
+          color: rgb(1, 0, 0),
+          opacity: 0.75,
+        })
 
-      currentPage.drawLine({
-        start: { x: 0.25 * 72, y: 0 },
-        end: { x: 0.25 * 72, y: height },
-        thickness: 3,
-        color: rgb(1, 0, 0),
-        opacity: 0.75,
-      })
+        currentPage.drawLine({
+          start: { x: 0.375 * 72, y: 0 },
+          end: { x: 0.375 * 72, y: height },
+          thickness: 3,
+          color: rgb(1, 0, 0),
+          opacity: 0.75,
+        })
 
-      currentPage.drawLine({
-        start: { x: width / 2, y: height },
-        end: { x: width / 2 , y: height - (0.25 * 72) },
-        thickness: 3,
-        color: rgb(1, 0, 0),
-        opacity: 0.75,
-      })
+        currentPage.drawLine({
+          start: { x: width / 2, y: height },
+          end: { x: width / 2 , y: height - (0.375 * 72) },
+          thickness: 3,
+          color: rgb(1, 0, 0),
+          opacity: 0.75,
+        })
 
-      currentPage.drawLine({
-        start: { x: 0, y: height - (0.25 * 72) },
-        end: { x: width, y: height - (0.25 * 72) },
-        thickness: 3,
-        color: rgb(1, 0, 0),
-        opacity: 0.75,
-      })
+        currentPage.drawLine({
+          start: { x: 0, y: height - (0.375 * 72) },
+          end: { x: width, y: height - (0.375 * 72) },
+          thickness: 3,
+          color: rgb(1, 0, 0),
+          opacity: 0.75,
+        })
 
-      currentPage.drawLine({
-        start: { x: width, y: height / 2 },
-        end: { x: width - (0.25 * 72), y: height / 2 },
-        thickness: 3,
-        color: rgb(1, 0, 0),
-        opacity: 0.75,
-      })
+        currentPage.drawLine({
+          start: { x: width, y: height / 2 },
+          end: { x: width - (0.375 * 72), y: height / 2 },
+          thickness: 3,
+          color: rgb(1, 0, 0),
+          opacity: 0.75,
+        })
 
-      currentPage.drawLine({
-        start: { x: width - (0.25 * 72), y: height},
-        end: { x: width - (0.25 * 72), y: 0},
-        thickness: 3,
-        color: rgb(1, 0, 0),
-        opacity: 0.75,
-      })
-      
-      currentPage.drawLine({
-        start: { x: width / 2, y: 0 },
-        end: { x: width / 2, y: 0.25 * 72},
-        thickness: 3,
-        color: rgb(1, 0, 0),
-        opacity: 0.75,
-      })
+        currentPage.drawLine({
+          start: { x: width - (0.375 * 72), y: height},
+          end: { x: width - (0.375 * 72), y: 0},
+          thickness: 3,
+          color: rgb(1, 0, 0),
+          opacity: 0.75,
+        })
+        
+        currentPage.drawLine({
+          start: { x: width / 2, y: 0 },
+          end: { x: width / 2, y: 0.375 * 72},
+          thickness: 3,
+          color: rgb(1, 0, 0),
+          opacity: 0.75,
+        })
 
-      currentPage.drawLine({
-        start: { x: 0, y: 0.25 * 72},
-        end: { x: width, y: 0.25 * 72},
-        thickness: 3,
-        color: rgb(1, 0, 0),
-        opacity: 0.75,
-      })
+        currentPage.drawLine({
+          start: { x: 0, y: 0.375 * 72},
+          end: { x: width, y: 0.375 * 72},
+          thickness: 3,
+          color: rgb(1, 0, 0),
+          opacity: 0.75,
+        })
+      } else {
+        currentPage.drawLine({
+          start: { x: 0, y: height / 2 },
+          end: { x: 0.25 * 72, y: height / 2 },
+          thickness: 3,
+          color: rgb(1, 0, 0),
+          opacity: 0.75,
+        })
+
+        currentPage.drawLine({
+          start: { x: 0.25 * 72, y: 0 },
+          end: { x: 0.25 * 72, y: height },
+          thickness: 3,
+          color: rgb(1, 0, 0),
+          opacity: 0.75,
+        })
+
+        currentPage.drawLine({
+          start: { x: width / 2, y: height },
+          end: { x: width / 2 , y: height - (0.25 * 72) },
+          thickness: 3,
+          color: rgb(1, 0, 0),
+          opacity: 0.75,
+        })
+
+        currentPage.drawLine({
+          start: { x: 0, y: height - (0.25 * 72) },
+          end: { x: width, y: height - (0.25 * 72) },
+          thickness: 3,
+          color: rgb(1, 0, 0),
+          opacity: 0.75,
+        })
+
+        currentPage.drawLine({
+          start: { x: width, y: height / 2 },
+          end: { x: width - (0.25 * 72), y: height / 2 },
+          thickness: 3,
+          color: rgb(1, 0, 0),
+          opacity: 0.75,
+        })
+
+        currentPage.drawLine({
+          start: { x: width - (0.25 * 72), y: height},
+          end: { x: width - (0.25 * 72), y: 0},
+          thickness: 3,
+          color: rgb(1, 0, 0),
+          opacity: 0.75,
+        })
+        
+        currentPage.drawLine({
+          start: { x: width / 2, y: 0 },
+          end: { x: width / 2, y: 0.25 * 72},
+          thickness: 3,
+          color: rgb(1, 0, 0),
+          opacity: 0.75,
+        })
+
+        currentPage.drawLine({
+          start: { x: 0, y: 0.25 * 72},
+          end: { x: width, y: 0.25 * 72},
+          thickness: 3,
+          color: rgb(1, 0, 0),
+          opacity: 0.75,
+        })
+      }
     }
   }
 
@@ -543,12 +610,30 @@ async function createCoverFile(page_count: number, trim_size: number[], paper_ty
     y_size = 3 * 72
   }
 
+  if (paper_type == "") {
+    x_size= 5 * 72
+    y_size = 3 * 72
+  }
+
   const page = new_doc.addPage([x_size, y_size])
 
   const font = await new_doc.embedFont(StandardFonts.Helvetica);
 
   if (trim_size[0] == 0) {
     const trimSizeText = "Please select a valid trim size"
+    const textSize = font.widthOfTextAtSize(trimSizeText, 20)
+    page.drawText(trimSizeText, {
+      x: (x_size / 2) - (textSize / 2),
+      y: y_size / 2,
+      size: 20,
+      font: font
+    })
+    console.log("the trim size is 0")
+    return new_doc
+  }
+
+  if (paper_type == "") {
+    const trimSizeText = "Please select a paper type"
     const textSize = font.widthOfTextAtSize(trimSizeText, 20)
     page.drawText(trimSizeText, {
       x: (x_size / 2) - (textSize / 2),
