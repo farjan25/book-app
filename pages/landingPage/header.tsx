@@ -16,16 +16,16 @@ export default function Header() {
         {/* Navigation Links */}
         <nav className="flex space-x-10 text-lg text-gray-700">
           <a href="#" className="hover:text-black transition-colors">
-            Features
+            
           </a>
           <a href="#" className="hover:text-black transition-colors">
-            Reviews
+            
           </a>
           <a href="#" className="hover:text-black transition-colors">
-            FAQ
+            
           </a>
           <a href="#" className="hover:text-black transition-colors">
-            More info
+            
           </a>
         </nav>
         

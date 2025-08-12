@@ -19,12 +19,12 @@ export default function Body() {
         <div className='flex items-center'>
           <section className=" min-h-[80vh] flex flex-col items-start justify-center pl-90">
             <h1 className="text-4xl sm:text-6xl font-semibold mb-4 py-5">
-              Get published in seconds.
+              A KDP formatting tool
             </h1>
             
             <p className="text-2xl mb-6 font-normal">
-              Don't deal with the hassle of Amazon KDP. <br /> <br />
-              Upload your manuscript and start getting sales <br /> on your book instantly.
+              I made a small website to fix some common kdp issues.  <br /> <br />
+              You can upload your pdf's and edit them <br /> Currently a work in progress.
             </p>
             
 
