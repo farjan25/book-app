@@ -141,7 +141,7 @@ export default function ProjectPage() {
     const { data, error } = await supabase
       .storage
       .from('pdf')
-      .createSignedUrl(pdfLink, 60 * 60); // 1 hour
+      .createSignedUrl(pdfLink, 60 * 60 * 24); // 1 day
 
       if (error) {
         console.error('Error getting signed URL:', error);
