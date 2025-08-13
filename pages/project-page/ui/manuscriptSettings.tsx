@@ -27,6 +27,8 @@ export default function ManuscriptSettings({settings, setSettings, projectId}: p
   const [bottomMargin, setBottomMargin] = useState("")
   const [gutterMargin, setGutterMargin] = useState("")
 
+  const [pageCount, setPageCount] = useState(0)
+
   const [gutterNotify, setGutterNotify] = useState("")
   
   const [marginCheck, setMarginCheck] = useState(false)
@@ -42,6 +44,8 @@ export default function ManuscriptSettings({settings, setSettings, projectId}: p
     setMarginCheck(settings.margin_check)
 
     setFonts(settings.fonts)
+
+    setPageCount(settings.page_count)
     checkGutter()
   }, [])
 
@@ -244,7 +248,7 @@ export default function ManuscriptSettings({settings, setSettings, projectId}: p
 
               <div>
                 <span className="text-blue-400 text-sm">
-                  *You should have a gutter margin of atleast {gutterNotify}" for a book of {settings.page_count} pages
+                  *You should have a gutter margin of atleast {gutterNotify}" for a book of {pageCount} pages
                 </span>
               </div>
               
@@ -262,6 +266,15 @@ export default function ManuscriptSettings({settings, setSettings, projectId}: p
                 <span>Enable margin check</span>
                 <Infobubble text="The red lines indicate the minimum margins necessary for KDP (0.25 inches on sides and a bit more on the gutter)."/>
               </div>
+
+              <div>
+                {
+                  marginCheck &&
+                  <span className="text-blue-400 text-sm">
+                    *Make sure this setting is disabled when downloading the final PDF
+                  </span>
+                }
+              </div>
           </div>
           
           <div className="h-2"></div>
@@ -271,7 +284,7 @@ export default function ManuscriptSettings({settings, setSettings, projectId}: p
             <div className="flex space-x-3 items-center">
               <label className="block font-medium mb-2 text-lg">Fonts:</label>             
               <div className="mb-3">
-                <Infobubble text="All fonts used in the book must be embedded in the PDF. These fonts can also be used in the body matter with headings and paging."/>
+                <Infobubble text="All the selected fonts will be automatically embedded into the PDF. These fonts can also be used in the body matter with headings and paging."/>
               </div>
             </div>
             <div className="flex space-x-15 items-center">
@@ -290,6 +303,12 @@ export default function ManuscriptSettings({settings, setSettings, projectId}: p
               <button onClick={() => setFonts((prev) => [...prev, ''])} className="w-6 h-6 flex-shrink-0 rounded-full border-[#FFD7D7] border-2 flex items-center justify-center hover:bg-[#FFD7D7] transition">
                 <PlusIcon className="w-3 h-3"></PlusIcon>
               </button>
+            </div>
+
+            <div className="py-4">
+              <span className="text-blue-400 text-sm">
+                *All used fonts need to be embedded into the PDF
+              </span>
             </div>
 
           </div>
