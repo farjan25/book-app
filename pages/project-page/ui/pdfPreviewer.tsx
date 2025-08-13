@@ -17,14 +17,12 @@ export default function PdfPreviewer({pdfUrl, tab, projectId, imageBlobUrl}: pro
     const filePath = `${projectId}_composite`
 
     const getImageUrl = async () => {
-        console.log(filePath)
         const { data, error } = await supabase
             .storage
             .from('project-images')
             .createSignedUrl(filePath, 60 * 60) // valid for 1 hour
 
         if (error || !data?.signedUrl) {
-            console.log("Could not generate signed URL", error)
             setImageUrl(null) // or other image
         } else {
             setImageUrl(data.signedUrl)

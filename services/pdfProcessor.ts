@@ -58,7 +58,7 @@ async function changePdf(pdfDoc: PDFDocument, differences: string[], settings: S
   //pdfDoc = await applyBleed(pdfDoc, settings.bleed)
   pdfDoc.registerFontkit(fontKit)
   pdfDoc = await applyNumbering(pdfDoc, settings.page_number_location, settings.extra_text_after, settings.extra_text_preceding, settings.numbering_vertical, settings.numbering_horizontal, settings.numbering_size, unique_pages, settings.body_font, settings.numbering_enabled)
-  pdfDoc = await applyMarginCheck(pdfDoc, settings.margin_check, settings.bleed)
+  pdfDoc = await applyMarginCheck(pdfDoc, settings.margin_check, settings.bleed, settings.page_count)
   
   
   // then cover stuff
@@ -188,145 +188,153 @@ const applyBleed = async (pdfDoc: PDFDocument, state: boolean) => {
   }
 }
 
-const applyMarginCheck = async (pdfDoc: PDFDocument, margin_check: boolean, bleed: boolean) => {
+const applyMarginCheck = async (pdfDoc: PDFDocument, margin_check: boolean, bleed: boolean, page_count: number) => {
 
   if (margin_check == true) {
 
+    let margin_number = 0.25
+    if (bleed == true) {
+      margin_number = 0.375
+    }
+
+    let gutter_margin = 0.25
+
+    if (page_count < 150) {
+      gutter_margin = 0.375
+    }
+    if (page_count > 150 && page_count < 301) {
+      gutter_margin = 0.5
+    }
+    if (page_count > 300 && page_count < 501) {
+      gutter_margin = 0.625
+    }
+    if (page_count > 500 && page_count < 701) {
+      gutter_margin = 0.75
+    }
+    if (page_count > 700) {
+      gutter_margin = 0.875
+    }
     const pages = pdfDoc.getPages()
 
     for (let i = 0; i < pages.length; i++) {
       const currentPage = pdfDoc.getPage(i)
       const { width, height } = currentPage.getSize()
 
-      if (bleed == true) {
-        currentPage.drawLine({
-          start: { x: 0, y: height / 2 },
-          end: { x: 0.375 * 72, y: height / 2 },
-          thickness: 3,
-          color: rgb(1, 0, 0),
-          opacity: 0.75,
-        })
+      const page_number = i + 1
+      if (page_number % 2 == 0) {
+      //left facing, gutter on the right
 
-        currentPage.drawLine({
-          start: { x: 0.375 * 72, y: 0 },
-          end: { x: 0.375 * 72, y: height },
-          thickness: 3,
-          color: rgb(1, 0, 0),
-          opacity: 0.75,
-        })
 
-        currentPage.drawLine({
-          start: { x: width / 2, y: height },
-          end: { x: width / 2 , y: height - (0.375 * 72) },
-          thickness: 3,
-          color: rgb(1, 0, 0),
-          opacity: 0.75,
-        })
-
-        currentPage.drawLine({
-          start: { x: 0, y: height - (0.375 * 72) },
-          end: { x: width, y: height - (0.375 * 72) },
-          thickness: 3,
-          color: rgb(1, 0, 0),
-          opacity: 0.75,
-        })
-
+        // this is the gutter
         currentPage.drawLine({
           start: { x: width, y: height / 2 },
-          end: { x: width - (0.375 * 72), y: height / 2 },
+          end: { x: width - (gutter_margin * 72), y: height / 2 },
           thickness: 3,
           color: rgb(1, 0, 0),
           opacity: 0.75,
         })
 
         currentPage.drawLine({
-          start: { x: width - (0.375 * 72), y: height},
-          end: { x: width - (0.375 * 72), y: 0},
+          start: { x: width - (gutter_margin * 72), y: height},
+          end: { x: width - (gutter_margin * 72), y: 0},
           thickness: 3,
           color: rgb(1, 0, 0),
           opacity: 0.75,
         })
-        
-        currentPage.drawLine({
-          start: { x: width / 2, y: 0 },
-          end: { x: width / 2, y: 0.375 * 72},
-          thickness: 3,
-          color: rgb(1, 0, 0),
-          opacity: 0.75,
-        })
+        // this is the gutter
 
-        currentPage.drawLine({
-          start: { x: 0, y: 0.375 * 72},
-          end: { x: width, y: 0.375 * 72},
-          thickness: 3,
-          color: rgb(1, 0, 0),
-          opacity: 0.75,
-        })
-      } else {
         currentPage.drawLine({
           start: { x: 0, y: height / 2 },
-          end: { x: 0.25 * 72, y: height / 2 },
+          end: { x: margin_number * 72, y: height / 2 },
           thickness: 3,
           color: rgb(1, 0, 0),
           opacity: 0.75,
         })
 
         currentPage.drawLine({
-          start: { x: 0.25 * 72, y: 0 },
-          end: { x: 0.25 * 72, y: height },
+          start: { x: margin_number * 72, y: 0 },
+          end: { x: margin_number * 72, y: height },
           thickness: 3,
           color: rgb(1, 0, 0),
           opacity: 0.75,
         })
 
-        currentPage.drawLine({
-          start: { x: width / 2, y: height },
-          end: { x: width / 2 , y: height - (0.25 * 72) },
-          thickness: 3,
-          color: rgb(1, 0, 0),
-          opacity: 0.75,
-        })
 
-        currentPage.drawLine({
-          start: { x: 0, y: height - (0.25 * 72) },
-          end: { x: width, y: height - (0.25 * 72) },
-          thickness: 3,
-          color: rgb(1, 0, 0),
-          opacity: 0.75,
-        })
-
-        currentPage.drawLine({
-          start: { x: width, y: height / 2 },
-          end: { x: width - (0.25 * 72), y: height / 2 },
-          thickness: 3,
-          color: rgb(1, 0, 0),
-          opacity: 0.75,
-        })
-
-        currentPage.drawLine({
-          start: { x: width - (0.25 * 72), y: height},
-          end: { x: width - (0.25 * 72), y: 0},
-          thickness: 3,
-          color: rgb(1, 0, 0),
-          opacity: 0.75,
-        })
-        
-        currentPage.drawLine({
-          start: { x: width / 2, y: 0 },
-          end: { x: width / 2, y: 0.25 * 72},
-          thickness: 3,
-          color: rgb(1, 0, 0),
-          opacity: 0.75,
-        })
-
-        currentPage.drawLine({
-          start: { x: 0, y: 0.25 * 72},
-          end: { x: width, y: 0.25 * 72},
-          thickness: 3,
-          color: rgb(1, 0, 0),
-          opacity: 0.75,
-        })
       }
+      if (page_number % 2 != 0) {
+        // right facing, gutter on the left
+
+        // this is the gutter
+        currentPage.drawLine({
+          start: { x: 0, y: height / 2 },
+          end: { x: gutter_margin * 72, y: height / 2 },
+          thickness: 3,
+          color: rgb(1, 0, 0),
+          opacity: 0.75,
+        })
+
+        currentPage.drawLine({
+          start: { x: gutter_margin * 72, y: 0 },
+          end: { x: gutter_margin * 72, y: height },
+          thickness: 3,
+          color: rgb(1, 0, 0),
+          opacity: 0.75,
+        })
+        // this is the gutter
+
+        currentPage.drawLine({
+          start: { x: width, y: height / 2 },
+          end: { x: width - (margin_number * 72), y: height / 2 },
+          thickness: 3,
+          color: rgb(1, 0, 0),
+          opacity: 0.75,
+        })
+
+        currentPage.drawLine({
+          start: { x: width - (margin_number * 72), y: height},
+          end: { x: width - (margin_number * 72), y: 0},
+          thickness: 3,
+          color: rgb(1, 0, 0),
+          opacity: 0.75,
+        })
+
+      }
+        
+        // left part was here
+
+      currentPage.drawLine({
+        start: { x: width / 2, y: height },
+        end: { x: width / 2 , y: height - (margin_number * 72) },
+        thickness: 3,
+        color: rgb(1, 0, 0),
+        opacity: 0.75,
+      })
+
+      currentPage.drawLine({
+        start: { x: 0, y: height - (margin_number * 72) },
+        end: { x: width, y: height - (margin_number * 72) },
+        thickness: 3,
+        color: rgb(1, 0, 0),
+        opacity: 0.75,
+      })
+
+      // right part was here
+      
+      currentPage.drawLine({
+        start: { x: width / 2, y: 0 },
+        end: { x: width / 2, y: margin_number * 72},
+        thickness: 3,
+        color: rgb(1, 0, 0),
+        opacity: 0.75,
+      })
+
+      currentPage.drawLine({
+        start: { x: 0, y: margin_number * 72},
+        end: { x: width, y: margin_number * 72},
+        thickness: 3,
+        color: rgb(1, 0, 0),
+        opacity: 0.75,
+      })
     }
   }
 
@@ -376,11 +384,11 @@ const applyMargin = async (pdfDoc: PDFDocument, margins: number[]) => {
     if (page_number % 2 != 0) {
       // right facing, gutter on the left
       newPage.drawPage(embeddedPage, {
-      x: mgutter,
-      y: mbottom,
-      width,
-      height
-    }) 
+        x: mgutter,
+        y: mbottom,
+        width,
+        height
+      }) 
     }
   }
 

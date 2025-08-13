@@ -14,10 +14,10 @@ export default function dashboard() {
         const { data, error } = await supabase.auth.getUser();
 
         if (data?.user) {
-            console.log('User is logged in:', data.user.email);
+            //console.log('User is logged in:', data.user.email);
             return true;
         } else {
-            console.log('User is NOT logged in');
+            //console.log('User is NOT logged in');
             router.push('login')
             return false;
         }

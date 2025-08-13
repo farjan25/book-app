@@ -62,8 +62,6 @@ export default function BodyMatter({settings, setSettings, projectId}: props) {
       setNumberingHorizontal(String(settings.numbering_horizontal))
 
       setNumberingSize(String(settings.numbering_size))
-
-      console.log("how many times doeds this run")
     }, [])
 
   const fixNumber = (number: string, type: string) => {

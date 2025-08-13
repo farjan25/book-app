@@ -26,6 +26,8 @@ export default function ManuscriptSettings({settings, setSettings, projectId}: p
   const [outsideMargin, setOutsideMargin] = useState("")
   const [bottomMargin, setBottomMargin] = useState("")
   const [gutterMargin, setGutterMargin] = useState("")
+
+  const [gutterNotify, setGutterNotify] = useState("")
   
   const [marginCheck, setMarginCheck] = useState(false)
 
@@ -40,7 +42,28 @@ export default function ManuscriptSettings({settings, setSettings, projectId}: p
     setMarginCheck(settings.margin_check)
 
     setFonts(settings.fonts)
+    checkGutter()
   }, [])
+
+  const checkGutter = () => {
+    const pages = settings.page_count
+
+    if (pages < 150) {
+      setGutterNotify("0.375")
+    }
+    if (pages > 150 && pages < 301) {
+      setGutterNotify("0.5")
+    }
+    if (pages > 300 && pages < 501) {
+      setGutterNotify("0.625")
+    }
+    if (pages > 500 && pages < 701) {
+      setGutterNotify("0.75")
+    }
+    if (pages > 700) {
+      setGutterNotify("0.875")
+    }
+  }
 
   const handleFontsSelect = (index: number, value: string) => {
         setFonts((prev) =>
@@ -217,6 +240,12 @@ export default function ManuscriptSettings({settings, setSettings, projectId}: p
                 onBlur={(e) => handleMargin(e.target.value, "gutter")}     
                 className="outline rounded-2xl pl-4 w-17" />
                 <span className="font-extralight">In</span>
+              </div>
+
+              <div>
+                <span className="text-blue-400 text-sm">
+                  *You should have a gutter margin of atleast {gutterNotify}" for a book of {settings.page_count} pages
+                </span>
               </div>
               
               <div className="-translate-y-0.5">

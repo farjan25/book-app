@@ -17,7 +17,7 @@ export default function Help() {
     return(
     <div className="absolute inset-0 z-0 bg-[url('/mainbackground.png')] bg-cover bg-no-repeat bg-center space-y-15">
       <div className="mx-auto text-5xl font-medium px-20 mt-5 flex flex-col">
-        Help
+        Guide
       </div>
 
       <div>

@@ -18,6 +18,10 @@ export default function Autogenerate({settings, setSettings}: props) {
             <Button className="bg-[#FFD7D7] hover:bg-[#FF8C8E] transition text-black font-normal text-md w-32 h-12">Auto-Generate</Button>
           </div>
 
+          <div className="h-25"/>
+          <div className="text-2xl text-red-400">
+            *this page currently does nothing and i'm not sure if it should be included.
+          </div>
         </div>
       </div>
     )

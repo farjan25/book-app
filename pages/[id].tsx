@@ -18,6 +18,7 @@ import { motion } from 'framer-motion'
 import { useSessionTimeout } from "@/services/useSessionTimeout";
 import { User, X } from 'lucide-react'
 import handler from '@/pages/api/log'
+import { countPages } from "@/services/pdfProcessor"
 
 export default function ProjectPage() {
 
@@ -55,7 +56,6 @@ export default function ProjectPage() {
   useEffect(() => {
   (async () => {
     const saved = localStorage.getItem('unsaved_settings')
-    console.log(saved)
     if (saved) {
       const session = await supabase.auth.getSession()
       const token = session.data.session?.access_token
@@ -81,7 +81,6 @@ export default function ProjectPage() {
 
   useSessionTimeout(60 * 60 * 1000, () => {
     setSessionCheck(true)
-    console.log("timed out")
     // You could also call an API to destroy the session here
   });
 
@@ -149,7 +148,13 @@ export default function ProjectPage() {
         return;
       }
 
-    setSignedUrl(data.signedUrl)
+      setSignedUrl(data.signedUrl)
+
+      const pageCount = await countPages(data.signedUrl)
+      setSettings(prev => ({
+        ...prev,
+        page_count: pageCount,
+      }));
     }; 
 
       
@@ -163,9 +168,7 @@ export default function ProjectPage() {
     const controller = new AbortController();
     const handler = setTimeout(() => {
       const fetchAndProcessPdf = async () => {
-        console.log(settings)
         try {
-          console.log(signed_url)
           const processedBlob = await processPdf(signed_url, settings, controller.signal);
           const blobUrl = URL.createObjectURL(processedBlob);
           setPdfBlobUrl(blobUrl);
@@ -206,7 +209,6 @@ useEffect(() => {
 }, [settings]);
 
 useEffect(() => {
-  console.log("settings chnaged")
 
   const handlePageLeave = () => {
     const payload = JSON.stringify({ token, settings, projectId });
@@ -239,7 +241,6 @@ useEffect(() => {
 }, [settings]);
 
 const getProjectName = async() => {
-  console.log(projectId)
   const { data, error } = await supabase
     .from('projects')
     .select('name')
@@ -282,7 +283,6 @@ const deleteProject = async () => {
 
   const { data: { user } } = await supabase.auth.getUser()
   if (user) {
-    console.log(pdfLink)
 
     const { data: storageData, error: storageError } = await supabase
     .storage
@@ -295,7 +295,7 @@ const deleteProject = async () => {
     .match({ id: projectId, user_id: user.id})
 
     if (storageError) {
-      console.log(storageError)
+      //console.log(storageError)
     }
 
   }
@@ -381,7 +381,7 @@ const deleteProject = async () => {
                 {
                   help && (
                     <div className="flex flex-col justify-center space-y-2 items-center w-25 h-30 absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-[#FFE9E9] text-black rounded shadow-lg">
-                      <div onClick={() => console.log("working")} className="">
+                      <div className="">
                         <a
                           href="/help"
                           target="_blank"

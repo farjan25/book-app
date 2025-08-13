@@ -43,14 +43,6 @@ export default function Cover({settings, setSettings, projectId, pdfUrl, onImage
 
     setPaperType(settings.paper_type)
 
-    const setPages = async() => {
-      const pageCount = await countPages(pdfUrl)
-      setSettings(prev => ({
-        ...prev,
-        page_count: pageCount,
-      }));
-    }
-
     const makeCompositeFile = async() => {
       const processedBlob = await createNewCoverFile(settings.trim_Size)
       const blobUrl = URL.createObjectURL(processedBlob)
@@ -64,16 +56,15 @@ export default function Cover({settings, setSettings, projectId, pdfUrl, onImage
         .upload(name, processedBlob, {
           upsert: true
         })
-
+      getSignedUrl()
     }
+
     const checkFile = async() => {
       const existingFile = await getSignedUrl()
       if (existingFile === false) {
         makeCompositeFile()
       }
     }
-
-    setPages()
     
     if (signedUrl == null || signedUrl == '') {
       checkFile()
@@ -109,7 +100,6 @@ export default function Cover({settings, setSettings, projectId, pdfUrl, onImage
       .createSignedUrl(link, 60 * 60); // 1 hour
 
       if (error) {
-        console.error('Error getting signed URL:', error);
         // in this case wait for a trim size.
         return false
       }
