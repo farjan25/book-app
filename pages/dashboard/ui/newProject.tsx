@@ -179,7 +179,7 @@ export default function NewProject({openState, setOpenState}: props) {
                                 type="text"
                                 placeholder="Title"
                                 onChange={(e) => setProjectName(e.target.value)}
-                                className="border border-gray-300 rounded-md p-2 w-125"
+                                className="border border-gray-300 rounded-md p-2 w-125 text-black"
                                 />
                             </div>
                             

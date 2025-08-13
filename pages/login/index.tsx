@@ -56,7 +56,7 @@ export default function LoginPage() {
           placeholder="Email..."
           value={email}
           onChange={e => setEmail(e.target.value)}
-          className="w-82 mt-5 px-5 text-lg py-2 border border-[#FFB2B2] rounded-md focus:outline-none focus:ring-2 focus:ring-[#FFB2B2]"
+          className="w-82 mt-5 px-5 text-lg py-2 border border-[#FFB2B2] rounded-md focus:outline-none focus:ring-2 focus:ring-[#FFB2B2] text-black"
         />
 
         <input
@@ -64,7 +64,7 @@ export default function LoginPage() {
           placeholder="Password..."
           value={password}
           onChange={e => setPassword(e.target.value)}
-          className="w-82 mt-3 px-5 text-lg py-2 border border-[#FFB2B2] rounded-md focus:outline-none focus:ring-2 focus:ring-[#FFB2B2]"
+          className="w-82 mt-3 px-5 text-lg py-2 border border-[#FFB2B2] rounded-md focus:outline-none focus:ring-2 focus:ring-[#FFB2B2] text-black"
         />
 
         <div className="mb-4 mt-2 text-xs text-left -translate-x-20">

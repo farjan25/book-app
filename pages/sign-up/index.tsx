@@ -13,7 +13,11 @@ export default function SignUp() {
   const handleSignup = async () => {
     const { error } = await supabase.auth.signUp({ email, password });
     if (error) console.error('Signup error:', error.message);
-    else console.log('Signed up!');
+    else {
+      console.log('Signed up!')
+      window.location.href = '/dashboard';
+    };
+    
   };
 
   const handleButtonClick = async () => {
@@ -57,7 +61,7 @@ export default function SignUp() {
           placeholder="Email..."
           value={email}
           onChange={e => setEmail(e.target.value)}
-          className="w-82 mt-5 px-5 text-lg py-2 border border-[#FFB2B2] rounded-md focus:outline-none focus:ring-2 focus:ring-[#FFB2B2]"
+          className="w-82 mt-5 px-5 text-lg py-2 border border-[#FFB2B2] rounded-md focus:outline-none focus:ring-2 focus:ring-[#FFB2B2] text-black"
         />
 
         <input
@@ -65,7 +69,7 @@ export default function SignUp() {
           placeholder="Password..."
           value={password}
           onChange={e => setPassword(e.target.value)}
-          className="w-82 mt-3 px-5 text-lg py-2 border border-[#FFB2B2] rounded-md focus:outline-none focus:ring-2 focus:ring-[#FFB2B2]"
+          className="w-82 mt-3 px-5 text-lg py-2 border border-[#FFB2B2] rounded-md focus:outline-none focus:ring-2 focus:ring-[#FFB2B2] text-black"
         />
 
         <button onClick={handleButtonClick} className="w-40 mt-5 bg-[#FFB2B2] text-black py-2 rounded-md mb-3 flex items-center justify-center gap-2 hover:bg-[#FF8C8E] transition cursor-pointer">
