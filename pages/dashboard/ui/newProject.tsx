@@ -168,13 +168,13 @@ export default function NewProject({openState, setOpenState}: props) {
                         className="absolute top-30 left-1/2 -translate-x-1/2 w-200 h-170 bg-white border-2 border-gray-200 rounded-2xl shadow-lg p-4 overflow-y-auto overflow-visible"
                         >
                             <div className="py-3 text-center text-2xl">
-                                <h1>
+                                <span>
                                     Upload your PDF or file:
-                                </h1>
+                                </span>
                             </div>
                             
                             <div className="py-2 ml-20 flex items-center gap-x-2 my-4">
-                                Project Title:
+                                <span>Project Title:</span>
                                 <input 
                                 type="text"
                                 placeholder="Title"

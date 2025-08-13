@@ -38,17 +38,17 @@ export default function LoginPage() {
     return(
     <div className="min-h-screen flex flex-col inset-0 z-0 bg-[url('/mainbackground.png')] bg-cover bg-no-repeat bg-center">
       <div className="flex justify-center mt-20">
-        <h1 className="text-4xl font-semibold">Log in</h1>
+        <span className="text-4xl font-semibold">Log in</span>
       </div>
 
       <div className="flex-grow flex flex-col items-center justify-center relative overflow-hidden transform -translate-y-30">
         <div className="flex text-lg">
-          <h2>
+          <span className="text-black">
           If you don't have an account.
-        </h2>
-        <h2 onClick={() => router.push('/sign-up')} className="text-blue-400 mx-1 cursor-pointer hover:opacity-60">
+          </span>
+        <span onClick={() => router.push('/sign-up')} className="text-blue-400 mx-1 cursor-pointer hover:opacity-60">
           sign up here
-        </h2>
+        </span>
         </div>
         
         <input
