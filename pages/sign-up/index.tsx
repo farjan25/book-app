@@ -39,12 +39,12 @@ export default function SignUp() {
     return(
     <div className="min-h-screen flex flex-col absolute inset-0 z-0 bg-[url('/mainbackground.png')] bg-cover bg-no-repeat bg-center">
       <div className="flex justify-center mt-20">
-        <span className="text-4xl font-semibold">Welcome to book formatter</span>
+        <span className="text-4xl font-semibold text-black">Welcome to book formatter</span>
       </div>
 
       <div className="flex-grow flex flex-col items-center justify-center relative overflow-hidden transform -translate-y-30">
         <div className="flex text-lg">
-          <span>
+          <span className="text-black">
           If you already have an account, 
         </span>
         <span onClick={() => router.push('/login')} className="text-blue-400 mx-1 cursor-pointer hover:opacity-60">

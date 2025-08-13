@@ -38,7 +38,7 @@ export default function LoginPage() {
     return(
     <div className="min-h-screen flex flex-col inset-0 z-0 bg-[url('/mainbackground.png')] bg-cover bg-no-repeat bg-center">
       <div className="flex justify-center mt-20">
-        <span className="text-4xl font-semibold">Log in</span>
+        <span className="text-4xl font-semibold text-black">Log in</span>
       </div>
 
       <div className="flex-grow flex flex-col items-center justify-center relative overflow-hidden transform -translate-y-30">
