@@ -9,12 +9,33 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const [errorMessage, setErrorMessage] = useState('')
+
   const handleLogin = async () => {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) { 
-      console.error('Login error:', error.message) 
+      switch (error.status) {
+        case 400: // Bad request, usually bad credentials
+          if (error.message.includes("Invalid login credentials")) {
+            setErrorMessage("*The email or password you entered is incorrect.")
+          } else {
+            setErrorMessage("*There was a problem with your login request.")
+          }
+          break;
+
+        case 422: // Validation error
+          setErrorMessage("*Please enter a valid email address.")
+          break;
+
+        case 429: // Rate limit
+          setErrorMessage("*Too many login attempts. Please try again later.")
+          break;
+
+        default:
+          setErrorMessage("*Something went wrong. Please try again.")
+      }
     } else {
-      console.log('Logged in!')
+      setErrorMessage("")
       window.location.href = '/dashboard';
     };
   };
@@ -74,6 +95,12 @@ export default function LoginPage() {
         <div className="mb-4 mt-2 text-xs text-left -translate-x-20">
           <span className="text-gray-500">forgot your password? </span>
           <a onClick={() => router.push("/reset-password")} className="text-blue-400 hover:opacity-60 cursor-pointer">Reset</a>
+        </div>
+
+        <div className="pb-5">
+          <span className="text-red-500 text-lg">
+            {errorMessage}
+          </span>
         </div>
 
         <button onClick={handleButtonClick} className="w-40 bg-[#FFB2B2] text-black py-2 rounded-md mb-3 flex items-center justify-center gap-2 hover:bg-[#FF8C8E] transition cursor-pointer space-x-1">

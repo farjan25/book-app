@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { motion } from 'framer-motion'
 import { X } from 'lucide-react'
 import { Button } from "@/components/ui/button"
@@ -103,6 +103,10 @@ export default function NewProject({openState, setOpenState}: props) {
             setMessage('No file uploaded.');
             return "failed";
         }
+        if (projectName == "") {
+            setMessage("Please set a name for your project.")
+            return "failed";
+        }
 
         setUploading(true);
         const filePath = `${Date.now()}_${pdfFile.name}`;
@@ -127,15 +131,34 @@ export default function NewProject({openState, setOpenState}: props) {
         const file = event.dataTransfer.files[0];
         if (!file || file.type !== 'application/pdf') {
             setMessage('Please drop a valid PDF.');
+            setPdfFile(null)
             return;
         }
         setPdfFile(file);
         const fileName = file.name
         setMessage(fileName);
+        console.log(pdfFile)
     };
 
     const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
         event.preventDefault();
+    };
+
+    const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+    const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (!file || file.type !== "application/pdf") {
+            setMessage("Please select a valid PDF.");
+            setPdfFile(null)
+            return;
+        }
+        setPdfFile(file);
+        setMessage(file.name);
+    };
+
+    const openFileDialog = () => {
+        fileInputRef.current?.click();
     };
 
 
@@ -193,18 +216,26 @@ export default function NewProject({openState, setOpenState}: props) {
                                 <div
                                     onDrop={handleDrop}
                                     onDragOver={handleDragOver}
+                                    onClick={openFileDialog}
                                     className="border-2 border-dashed border-gray-400 rounded-md p-8 text-center bg-gray-50 w-150 h-100"
                                 >
+                                    <input
+                                        type="file"
+                                        accept="application/pdf"
+                                        ref={fileInputRef}
+                                        style={{ display: "none" }}
+                                        onChange={handleFileSelect}
+                                    />
                                 <p className="text-gray-700">
-                                    Drag & drop a PDF file here
+                                    Drag & drop or click to select a PDF file here
                                 </p>
                                 {uploading && <p className="text-blue-500 mt-2">Creating Project...</p>}
                                 {message && <p className="text-green-600 mt-2">{message}</p>}
                                 {pdfFile && 
-                                <div className="flex justify-center">
-                                    <Image src="/pdficon.png" alt="Avatar" width={400} height={300}
-                                    className="py-5 opacity-50"></Image>
-                                </div>
+                                    <div className="flex justify-center">
+                                        <Image src="/pdficon.png" alt="Avatar" width={400} height={300}
+                                        className="py-5 opacity-50"></Image>
+                                    </div>
                                 }
                                 </div>
                             </div>

@@ -750,7 +750,15 @@ async function applyImages(new_doc: PDFDocument, project_id: number, page_count:
     
     const coverBlob = coverData // Blob
     const coverBytes = await coverBlob.arrayBuffer()
-    const coverImage = await new_doc.embedPng(coverBytes)
+    let coverImage;
+
+    if (coverData.type === "image/png") {
+      coverImage = await new_doc.embedPng(coverBytes);
+    } else if (coverData.type === "image/jpeg") {
+      coverImage = await new_doc.embedJpg(coverBytes);
+    } else {
+      throw new Error(`Unsupported image type: ${coverData.type}`);
+    }
 
     page.drawImage(coverImage, {
       x: (0.125 + trim_size[0] + spine_width) * 72,
@@ -769,8 +777,15 @@ async function applyImages(new_doc: PDFDocument, project_id: number, page_count:
   if (spineData && spine_bool) {
     const spineBlob = spineData // Blob
     const spineBytes = await spineBlob.arrayBuffer()
-    const spineImage = await new_doc.embedPng(spineBytes)
- 
+    let spineImage;
+
+    if (spineData.type === "image/png") {
+      spineImage = await new_doc.embedPng(spineBytes);
+    } else if (spineData.type === "image/jpeg") {
+      spineImage = await new_doc.embedJpg(spineBytes);
+    } else {
+      throw new Error(`Unsupported image type: ${spineData.type}`);
+    }
     page.drawImage(spineImage, {
       x: (0.125 + trim_size[0]) * 72,
       y: 0,
@@ -788,7 +803,15 @@ async function applyImages(new_doc: PDFDocument, project_id: number, page_count:
   if (backData && back_bool) {
     const backBlob = backData // Blob
     const backBytes = await backBlob.arrayBuffer()
-    const backImage = await new_doc.embedPng(backBytes)
+    let backImage;
+
+    if (backData.type === "image/png") {
+      backImage = await new_doc.embedPng(backBytes);
+    } else if (backData.type === "image/jpeg") {
+      backImage = await new_doc.embedJpg(backBytes);
+    } else {
+      throw new Error(`Unsupported image type: ${backData.type}`);
+    }
 
     page.drawImage(backImage, {
       x: 0,
@@ -802,8 +825,6 @@ async function applyImages(new_doc: PDFDocument, project_id: number, page_count:
 }
 
 async function changeCoverPdf(pdfDoc: PDFDocument, settings: Settings) {
-  const paper_type = settings.paper_type
-  const page_count = settings.page_count
   
 
   let new_doc = await createCoverFile(settings.page_count, settings.trim_Size, settings.paper_type)  // -- based on paper type, trim size, page count also include the ISBN
