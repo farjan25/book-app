@@ -12,8 +12,9 @@ export default function SignUp() {
 
   const handleSignup = async () => {
     const { error } = await supabase.auth.signUp({ email, password });
-    if (error) console.error('Signup error:', error.message);
-    else {
+    if (error) {
+      console.error('Signup error:', error.message)
+    } else {
       console.log('Signed up!')
       window.location.href = '/dashboard';
     };

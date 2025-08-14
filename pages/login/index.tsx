@@ -11,8 +11,12 @@ export default function LoginPage() {
 
   const handleLogin = async () => {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) console.error('Login error:', error.message);
-    else console.log('Logged in!'); router.push('dashboard');
+    if (error) { 
+      console.error('Login error:', error.message) 
+    } else {
+      console.log('Logged in!')
+      window.location.href = '/dashboard';
+    };
   };
 
   const handleButtonClick = async () => {
@@ -28,8 +32,8 @@ export default function LoginPage() {
       await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          //redirectTo: 'https://bookquick.vercel.app/dashboard',
-          redirectTo: 'https://localhost:3000/dashboard'
+          redirectTo: 'https://bookquick.vercel.app/dashboard',
+          //redirectTo: 'https://localhost:3000/dashboard'
         },
       });
     }
