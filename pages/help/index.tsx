@@ -88,7 +88,7 @@ export default function Help() {
           Valid cover files consist of a front cover, spine, and back cover, all laid out in a pdf. Based on book information (page count, trim size, paper type, etc.) a proper template will be automatically made for you. You can download the template as is and edit it yourself, or choose to upload images for each part of it.
           <br />
           <br />
-          <span className="font-semibold">Uploads:</span> By uploading a front / spine / back image, the template gets filled out, and images get automatically scaled to fit it.
+          <span className="font-semibold">Uploads:</span> By uploading a front / spine / back image, the template gets filled out, and images get automatically scaled to fit it. Currently only PNG uploads work, but other image types will be supported in the future.
           <br />
           <br />
           <span className="font-semibold">Paper type:</span> The type of paper you choose affects the cover and spine size. You select the paper type on KDP's paperback content page. You can look there for more information on the differences between each type.
