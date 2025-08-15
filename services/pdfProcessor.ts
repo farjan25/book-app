@@ -720,7 +720,7 @@ async function createCoverFile(page_count: number, trim_size: number[], paper_ty
   return new_doc
 }
 
-async function applyImages(new_doc: PDFDocument, project_id: number, page_count: number, trim_size: number[], paper_type: string, cover_bool: boolean, spine_bool: boolean, back_bool: boolean) {
+async function applyImages(new_doc: PDFDocument, project_id: number, page_count: number, trim_size: number[], paper_type: string, cover_bool: boolean, spine_bool: boolean, back_bool: boolean, coverFile: File | null, spineFile: File | null, backFile: File | null) {
 
   // front section
   const page = new_doc.getPage(0)
@@ -739,25 +739,19 @@ async function applyImages(new_doc: PDFDocument, project_id: number, page_count:
     spine_width = 0.002252 * page_count 
   }
 
-  const { data: coverData, error: coverError } = await supabase
-    .storage
-    .from('project-images')
-    .download(`${project_id}_cover`)
 
-
-
-  if (coverData && cover_bool) {
+  if (coverFile && cover_bool) {
     
-    const coverBlob = coverData // Blob
+    const coverBlob = coverFile // Blob
     const coverBytes = await coverBlob.arrayBuffer()
     let coverImage;
 
-    if (coverData.type === "image/png") {
+    if (coverFile.type === "image/png") {
       coverImage = await new_doc.embedPng(coverBytes);
-    } else if (coverData.type === "image/jpeg") {
+    } else if (coverFile.type === "image/jpeg") {
       coverImage = await new_doc.embedJpg(coverBytes);
     } else {
-      throw new Error(`Unsupported image type: ${coverData.type}`);
+      throw new Error(`Unsupported image type: ${coverFile.type}`);
     }
 
     page.drawImage(coverImage, {
@@ -769,22 +763,17 @@ async function applyImages(new_doc: PDFDocument, project_id: number, page_count:
     
   }
 
-  const { data: spineData, error: spineError } = await supabase
-    .storage
-    .from('project-images')
-    .download(`${project_id}_spine`)
-
-  if (spineData && spine_bool) {
-    const spineBlob = spineData // Blob
+  if (spineFile && spine_bool) {
+    const spineBlob = spineFile // Blob
     const spineBytes = await spineBlob.arrayBuffer()
     let spineImage;
 
-    if (spineData.type === "image/png") {
+    if (spineFile.type === "image/png") {
       spineImage = await new_doc.embedPng(spineBytes);
-    } else if (spineData.type === "image/jpeg") {
+    } else if (spineFile.type === "image/jpeg") {
       spineImage = await new_doc.embedJpg(spineBytes);
     } else {
-      throw new Error(`Unsupported image type: ${spineData.type}`);
+      throw new Error(`Unsupported image type: ${spineFile.type}`);
     }
     page.drawImage(spineImage, {
       x: (0.125 + trim_size[0]) * 72,
@@ -795,46 +784,41 @@ async function applyImages(new_doc: PDFDocument, project_id: number, page_count:
   
   }
   
-  const { data: backData, error: backError } = await supabase
-    .storage
-    .from('project-images')
-    .download(`${project_id}_back`)
-
-  if (backData && back_bool) {
-    const backBlob = backData // Blob
+  if (backFile && back_bool) {
+    const backBlob = backFile // Blob
     const backBytes = await backBlob.arrayBuffer()
     let backImage;
 
-    if (backData.type === "image/png") {
+    if (backFile.type === "image/png") {
       backImage = await new_doc.embedPng(backBytes);
-    } else if (backData.type === "image/jpeg") {
+    } else if (backFile.type === "image/jpeg") {
       backImage = await new_doc.embedJpg(backBytes);
     } else {
-      throw new Error(`Unsupported image type: ${backData.type}`);
+      throw new Error(`Unsupported image type: ${backFile.type}`);
     }
 
     page.drawImage(backImage, {
       x: 0,
       y: 0,
-      width: (0.125 + 5) * 72,
-      height: (0.25 + 8) * 72,
+      width: (0.125 + trim_size[0]) * 72,
+      height: (0.25 + trim_size[1]) * 72,
     })
   }
   
   return new_doc
 }
 
-async function changeCoverPdf(pdfDoc: PDFDocument, settings: Settings) {
+async function changeCoverPdf(pdfDoc: PDFDocument, settings: Settings, coverFile: File | null, spineFile: File | null, backFile: File | null) {
   
 
   let new_doc = await createCoverFile(settings.page_count, settings.trim_Size, settings.paper_type)  // -- based on paper type, trim size, page count also include the ISBN
-  new_doc = await applyImages(new_doc, settings.project_id, settings.page_count, settings.trim_Size, settings.paper_type, settings.cover, settings.spine, settings.back)
+  new_doc = await applyImages(new_doc, settings.project_id, settings.page_count, settings.trim_Size, settings.paper_type, settings.cover, settings.spine, settings.back, coverFile, spineFile, backFile)
 
   return new_doc
 }
 
 
-export async function processCoverFile(pdf_url: string, settings: Settings): Promise<Blob> {
+export async function processCoverFile(pdf_url: string, settings: Settings, coverFile: File | null, spineFile: File | null, backFile: File | null): Promise<Blob> {
 
   // 1. Fetch the PDF
 
@@ -847,7 +831,7 @@ export async function processCoverFile(pdf_url: string, settings: Settings): Pro
   let pdfDoc = await PDFDocument.load(pdfBuffer)
 
   // Modificaions here
-  pdfDoc = await changeCoverPdf(pdfDoc, settings)
+  pdfDoc = await changeCoverPdf(pdfDoc, settings, coverFile, spineFile, backFile)
 
   // 3. Return the modified PDF as a Blob
   const modifiedBytes = await pdfDoc.save();

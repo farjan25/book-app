@@ -17,6 +17,8 @@ interface props {
 
 export default function Cover({settings, setSettings, projectId, pdfUrl, onImageChange}: props) {
 
+  const [filesFetched, setFilesFetched] = useState(false)
+
   const coverInputRef = useRef<HTMLInputElement>(null)
   const [coverFile, setCoverFile] = useState<File | null>(null)
   const [coverMessage, setCoverMessage] = useState('')
@@ -29,19 +31,67 @@ export default function Cover({settings, setSettings, projectId, pdfUrl, onImage
   const [backFile, setBackFile] = useState<File | null>(null)
   const [backMessage, setBackMessage] = useState('')
 
-  const existingInputRef = useRef<HTMLInputElement>(null)
-  const [existingFile, setExistingFile] = useState<File | null>(null)
-  const [existingMessage, setExistingMessage] = useState('')
-
   const [paperType, setPaperType] = useState<string | null>(null)
   const [selected, setSelected] = useState<number | null>(null)
 
   const [compositeFile, setCompositeFile] = useState<File | null>(null)
   const [signedUrl, setSignedUrl] = useState("")
+  
 
   useEffect(() => {
 
     setPaperType(settings.paper_type)
+
+    const getImages = async() => {
+      const { data: coverData, error: coverError } = await supabase
+        .storage
+        .from('project-images')
+        .download(`${projectId}_cover`)
+
+      if (coverData) {
+        const ext = coverData.type.split("/")[1] || "bin";
+        const cover_file = new File(
+          [coverData], // Blob parts
+          `${projectId}_cover.${ext}`, // File name
+          { type: coverData.type } // Preserve MIME type
+        );
+        setCoverFile(cover_file)
+      }
+
+      const { data: spineData, error: spineError } = await supabase
+        .storage
+        .from('project-images')
+        .download(`${projectId}_spine`)
+
+      if (spineData) {
+        const ext = spineData.type.split("/")[1] || "bin";
+        const spine_file = new File(
+          [spineData], // Blob parts
+          `${projectId}_spine.${ext}`, // File name
+          { type: spineData.type } // Preserve MIME type
+        );
+        setSpineFile(spine_file)
+      }
+
+      const { data: backData, error: backError } = await supabase
+        .storage
+        .from('project-images')
+        .download(`${projectId}_back`)
+
+      if (backData) {
+        const ext = backData.type.split("/")[1] || "bin";
+        const back_file = new File(
+          [backData], // Blob parts
+          `${projectId}_back.${ext}`, // File name
+          { type: backData.type } // Preserve MIME type
+        );
+        setBackFile(back_file)
+      }
+      console.log("got images")
+      setFilesFetched(true)
+    }
+
+    getImages()
 
     const makeCompositeFile = async() => {
       const processedBlob = await createNewCoverFile(settings.trim_Size)
@@ -75,7 +125,8 @@ export default function Cover({settings, setSettings, projectId, pdfUrl, onImage
   useEffect(() => {
     const fetchAndProcessPdf = async () => {
       try {
-        const processedBlob = await processCoverFile(signedUrl, settings);
+        console.log(coverFile, spineFile, backFile)
+        const processedBlob = await processCoverFile(signedUrl, settings, coverFile, spineFile, backFile);
         const blobUrl = URL.createObjectURL(processedBlob);
         onImageChange(blobUrl);
       } catch (e: any) {
@@ -87,9 +138,9 @@ export default function Cover({settings, setSettings, projectId, pdfUrl, onImage
       }
     };
 
-    if (signedUrl) fetchAndProcessPdf()
+    if (signedUrl && filesFetched) fetchAndProcessPdf()
 
-  }, [signedUrl, settings])
+  }, [signedUrl, settings, filesFetched])
 
   const getSignedUrl = async () => {
 
@@ -226,6 +277,7 @@ export default function Cover({settings, setSettings, projectId, pdfUrl, onImage
 
   const cancelFile = async(type: string) => {
     if (type == "cover") {
+      setCoverFile(null)
       setSettings(prev => ({
         ...prev,
         cover: false,
@@ -234,6 +286,7 @@ export default function Cover({settings, setSettings, projectId, pdfUrl, onImage
     }
 
     if (type == "spine") {
+      setSpineFile(null)
       setSettings(prev => ({
         ...prev,
         spine: false,
@@ -242,6 +295,7 @@ export default function Cover({settings, setSettings, projectId, pdfUrl, onImage
     }
 
     if (type == "back") {
+      setBackFile(null)
       setSettings(prev => ({
         ...prev,
         back: false,

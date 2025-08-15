@@ -14,10 +14,22 @@ export default function ProjectIcon({projectId, projectName}: props) {
     const project = "project-page"
     const coverFilePath = `${projectId}_cover`
     const [signedUrl, setSignedUrl] = useState<string | null>(null)
+    
+    const [coverBool, setCoverBool] = useState(false)
 
     useEffect(() => {
         
         const getImageUrl = async () => {
+        const {data: settingsData, error: settingsError} = await supabase
+            .from('projects')
+            .select('*')
+            .eq('id', projectId)
+            .single();
+
+        if (settingsData) {
+            setCoverBool(settingsData.settings.cover)
+        }
+        
         const { data, error } = await supabase
             .storage
             .from('project-images')
@@ -41,7 +53,7 @@ export default function ProjectIcon({projectId, projectName}: props) {
             <div className="w-70 h-90 bg-[#FFD7D7] border-gray-200 p-4 cursor-pointer rounded-lg shadow-lg">
                 <div className="flex justify-center">
                     <div className="bg-white w-50 h-65 translate-y-2">
-                        {signedUrl && <img src={signedUrl} alt="Cover Image" className="w-full h-full object-cover"/>}
+                        {signedUrl && coverBool && <img src={signedUrl} alt="Cover Image" className="w-full h-full object-cover"/>}
                     </div>
                 </div>
 
