@@ -3,8 +3,13 @@ import Body from './landingPage/body'
 
 export default function Home() {
   return (
-    <div className="absolute inset-0 z-0 bg-[url('/mainpage.png')] bg-cover bg-no-repeat bg-center">
-      <div>
+    <div className="">
+      <div className="relative w-full h-[4200px] overflow-hidden">
+        <img
+          src="/landingpage2.png"
+          alt="Background"
+          className="w-full h-auto absolute top-0 left-0 -z-10"
+        />
         <Header />
         <Body />
       </div>
