@@ -4,7 +4,7 @@ import Body from './landingPage/body'
 export default function Home() {
   return (
     <div className="">
-      <div className="relative w-full h-[4200px] overflow-hidden">
+      <div className="relative w-full h-[3300px] overflow-hidden">
         <img
           src="/landingpage2.png"
           alt="Background"

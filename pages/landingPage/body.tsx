@@ -80,7 +80,7 @@ export default function Body() {
           </h4>
         </div>
 
-        <div className='w-4/5 mt-40'>
+        <div className='mt-40'>
           <div className='flex justify-center'>
             <span className='text-5xl'>
               Full manuscript customization:
@@ -95,39 +95,6 @@ export default function Body() {
           </div>
         </div>
 
-        <div className='flex mt-60'>
-
-          <div className='w-1/5'>
-            <img></img>
-          </div>
-
-          <div className='w-4/5 '>
-            <div className='flex justify-center'>
-              <span className='text-5xl'>
-                Autogenerate
-              </span>
-            </div>
-            <div className='flex justify-center mt-5'>
-              <span className='text-3xl text-center'>
-                Automatically generate a KDP-ready manuscript
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <div className='w-4/5 mt-60'>
-          <div className='flex justify-center'>
-            <span className='text-5xl'>
-              Templates
-            </span>
-          </div>
-          <div className='flex justify-center mt-5'>
-            <span className='text-3xl text-center'>
-              Effortless plug and play templates
-              for book matter
-            </span>
-          </div>
-        </div>
 
         <div className='flex justify-center mt-60'>
           <span className={`${playfair.className} text-7xl font-medium`}>
@@ -184,21 +151,6 @@ export default function Body() {
             </p>
           </div>
 
-          <div className='flex justify-center mt-10'>
-            <button onClick={() => setOpen4(!open4)} className='bg-[#FAC4C4] w-250 h-18 rounded-3xl text-4xl drop-shadow-lg opacity-70 cursor-pointer'>
-              <span className=''>I'd like to request a feature. Where can I do that?</span>
-            </button>
-          </div>
-        </div>
-
-        <div
-            className={`overflow-hidden transition-all duration-500 ease-in-out ${
-              open4 ? "max-h-40 mt-4" : "max-h-0"
-            }`}
-          >
-            <p className="text-2xl text-center">
-              We'd love to add new features that you might want. Email us at ....
-            </p>
         </div>
 
         {
