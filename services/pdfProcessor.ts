@@ -69,20 +69,17 @@ async function changePdf(pdfDoc: PDFDocument, differences: string[], settings: S
 
 export async function processPdf(pdf_url: string, settings: Settings, signal: AbortSignal): Promise<Blob> {
 
-  // 1. Fetch the PDF
   const response = await fetch(pdf_url, { signal });
   if (!response.ok) throw new Error("Failed to fetch PDF from signed URL");
 
   const pdfBuffer = await response.arrayBuffer();
 
-  // 2. Load PDF and apply modifications
   let pdfDoc = await PDFDocument.load(pdfBuffer)
 
   if (pdfDoc) {
     //console.log("there exists a pdfDoc")
   }
 
-  // Modificaions here
   pdfDoc = await changePdf(pdfDoc, [], settings)
 
   // 3. Return the modified PDF as a Blob
