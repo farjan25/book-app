@@ -4,7 +4,7 @@ export const googleFonts = {
 }
 
 export async function fetchGoogleFonts() {
-const res = await fetch(`https://www.googleapis.com/webfonts/v1/webfonts?key=AIzaSyA7PjZk4XECIdsCBRrgFzbN-Vd0r9ZVMvA`)
+const res = await fetch(process.env.NEXT_PUBLIC_GOOGLE_FONT_API!)
   const data = await res.json()
   return data.items.map((font: any) => ({
     name: font.family,
