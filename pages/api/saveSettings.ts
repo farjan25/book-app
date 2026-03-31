@@ -22,7 +22,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   
     try {
       
-      // Read raw body string (since sendBeacon sends text/plain)
       console.log("before body text")
       const bodyText = await new Promise<string>((resolve, reject) => {
         let data = '';
@@ -49,9 +48,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const { data: verificationData, error: verificationError } = await supabase
         .from('projects')
         .select('id')
-        .eq('id', projectId)        // project ID matches
-        .eq('user_id', user.id)     // user ID matches
-        .single();                  // expect a single row (or none)
+        .eq('id', projectId)        
+        .eq('user_id', user.id)     
+        .single();                  
 
       if (verificationError) {
         console.error('DB error:', verificationError);
@@ -59,15 +58,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
 
       if (!verificationData) {
-        // No matching project found for this user
         console.log('Project does not belong to this user or does not exist');
-        // deny access or handle accordingly
       } else {
-        // Project belongs to the user
         console.log('Project verified:', verificationData);
       }
-
-      // Save settings with elevated service key
+      //save
       const { error: saveError } = await supabase
         .from('projects')
         .update({ settings: settings })

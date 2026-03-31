@@ -23,7 +23,7 @@ import { countPages } from "@/services/pdfProcessor"
 export default function ProjectPage() {
 
   const router = useRouter();
-  const { id } = router.query; // this is the projectId from the URL
+  const { id } = router.query;
   const [isLoading, setIsLoading] = useState(true)
 
   const [project, setProject] = useState(null)
@@ -81,7 +81,7 @@ export default function ProjectPage() {
 
   useSessionTimeout(60 * 60 * 1000, () => {
     setSessionCheck(true)
-    // You could also call an API to destroy the session here
+    
   });
 
   useEffect(() => {
@@ -99,7 +99,7 @@ export default function ProjectPage() {
 
   useEffect(() => {
     const fetchProject = async () => {
-      if (!id) return; // id might be undefined initially
+      if (!id) return; 
 
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
@@ -286,11 +286,11 @@ const deleteProject = async () => {
 
     const { data: storageData, error: storageError } = await supabase
     .storage
-    .from('pdf')       // replace with your actual bucket name
-    .remove([pdfLink]) // exact path inside the bucket
+    .from('pdf')       
+    .remove([pdfLink]) 
 
     const { data: projectData, error: projectError } = await supabase
-    .from("projects") // your table name
+    .from("projects") 
     .delete()
     .match({ id: projectId, user_id: user.id})
 

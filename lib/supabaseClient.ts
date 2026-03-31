@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = 'https://gaqohqmpinyqhymzqtbt.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdhcW9ocW1waW55cWh5bXpxdGJ0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgxMzUzNjEsImV4cCI6MjA2MzcxMTM2MX0.Ha7j5sagKZob7qj1C9F-SK8KobNWPrp3VaXc1tVHA8E';
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_KEY!
 
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
@@ -17,7 +17,6 @@ export async function getProject(userId: string, projectId: string) {
   return data;
 }
 
-// Update settings JSON
 export async function updateProjectSettings(projectId: string, newSettings: any) {
   const { error } = await supabase
     .from('projects')
@@ -27,7 +26,6 @@ export async function updateProjectSettings(projectId: string, newSettings: any)
   if (error) throw error;
 }
 
-// Download PDF from storage
 export async function getPdfFile(path: string): Promise<Uint8Array> {
   const { data, error } = await supabase.storage
     .from('project-pdfs')
@@ -37,7 +35,6 @@ export async function getPdfFile(path: string): Promise<Uint8Array> {
   return new Uint8Array(await data.arrayBuffer());
 }
 
-// Upload new PDF to storage
 export async function uploadPdf(path: string, blob: Blob) {
   const { error } = await supabase.storage
     .from('project-pdfs')

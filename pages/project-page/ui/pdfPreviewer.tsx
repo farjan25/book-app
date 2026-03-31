@@ -20,7 +20,7 @@ export default function PdfPreviewer({pdfUrl, tab, projectId, imageBlobUrl}: pro
         const { data, error } = await supabase
             .storage
             .from('project-images')
-            .createSignedUrl(filePath, 60 * 60) // valid for 1 hour
+            .createSignedUrl(filePath, 60 * 60) // valid for 1 hr
 
         if (error || !data?.signedUrl) {
             setImageUrl(null) // or other image
