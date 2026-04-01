@@ -213,10 +213,8 @@ useEffect(() => {
   const handlePageLeave = () => {
     const payload = JSON.stringify({ token, settings, projectId });
 
-    // Fire-and-forget API call
     navigator.sendBeacon('/api/saveSettings', payload);
 
-    // Optional: save to localStorage for backup
     //localStorage.setItem('unsaved_settings', payload);
   };
 
